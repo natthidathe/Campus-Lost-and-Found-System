@@ -1,4 +1,3 @@
-// src/pages/client/Identification.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ClientLayout from "./AdminLayout1";
@@ -12,11 +11,14 @@ function Identification() {
   const [tel, setTel] = useState("");
   const [files, setFiles] = useState([]);
 
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const handleFileChange = (e) => {
     const list = Array.from(e.target.files || []);
     setFiles(list);
   };
 
+  // when user clicks Submit → just open popup
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -28,12 +30,25 @@ function Identification() {
       filesCount: files.length,
     };
 
-    console.log("Identification submitted:", payload);
-    alert("Identification submitted (connect to backend later).");
+    console.log("Identification payload (before confirm):", payload);
+    setShowConfirm(true);
   };
 
   const handleCancel = () => {
-    navigate(-1); // go back to previous page
+    navigate(-1);
+  };
+
+
+  const handleConfirmYes = () => {
+    setShowConfirm(false);
+    // later you can really send payload to backend here
+    console.log("Identification confirmed & submitted");
+    navigate("/admin/items");
+  };
+
+
+  const handleConfirmNo = () => {
+    setShowConfirm(false);
   };
 
   return (
@@ -59,7 +74,7 @@ function Identification() {
               />
             </div>
 
-            {/* TU Student / Other */}
+            {/* SIIT Student / Other */}
             <div className="id-row id-row-radio">
               <div className="radio-group">
                 <label className="radio-item">
@@ -79,10 +94,12 @@ function Identification() {
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
                   disabled={role !== "student"}
+                  required
                 />
+                <span className="required">*</span>
               </div>
 
-              <div className="radio-group other-radio">
+              <div className="radio-group">
                 <label className="radio-item">
                   <input
                     type="radio"
@@ -143,6 +160,41 @@ function Identification() {
           </form>
         </section>
       </div>
+
+      {/* ========= CONFIRM POPUP ========= */}
+      {showConfirm && (
+        <>
+          <div className="confirm-backdrop" />
+          <div className="confirm-modal">
+            <button
+              className="confirm-close"
+              type="button"
+              onClick={handleConfirmNo}
+            >
+              ×
+            </button>
+            <div className="confirm-body">
+              <p className="confirm-text">Confirm Submit ?</p>
+              <div className="confirm-actions">
+                <button
+                  type="button"
+                  className="btn-primary small"
+                  onClick={handleConfirmYes}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  className="btn-secondary small"
+                  onClick={handleConfirmNo}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </ClientLayout>
   );
 }
