@@ -368,11 +368,6 @@
     max-width: 260px;
   }
   
-  /* Move “Other” to the right like your mockup */
-  .other-radio {
-    margin-left: auto;
-  }
-  
   /* Upload button */
   .upload-btn {
     display: inline-flex;
@@ -464,5 +459,64 @@
       width: 100%;
       text-align: center;
     }
+  }
+  
+  /* === Confirm submit popup === */
+
+.confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(3px);
+    z-index: 40;
+  }
+  
+  /* center white card */
+  .confirm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 460px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+    z-index: 50;
+    padding: 24px 32px 28px;
+  }
+  
+  /* top-right X button */
+  .confirm-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .confirm-body {
+    margin-top: 8px;
+  }
+  
+  .confirm-text {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  
+  /* Yes / No buttons row */
+  .confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  
+  /* slightly smaller versions of your existing buttons */
+  .btn-primary.small,
+  .btn-secondary.small {
+    padding: 6px 18px;
+    font-size: 14px;
   }
   
