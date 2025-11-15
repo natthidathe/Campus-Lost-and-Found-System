@@ -41,8 +41,8 @@ const Sidebar = ({ isOpen, onClose }) => {
             Home
           </Link>
           <Link
-            to="/admin/admin-item"
-            className={isActive("/admin/item")}
+            to="/admin/items"
+            className={isActive("/admin/items")}
             onClick={onClose}
           >
             Item List
