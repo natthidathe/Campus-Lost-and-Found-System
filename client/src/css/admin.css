@@ -1,0 +1,270 @@
+/* ===== Admin dashboard layout ===== */
+
+/* Shared title style (“Summary”, “Recent Activities Table”) */
+.admin-section-title {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 32px 0 16px;
+    padding-left: 80px; /* align with cards + table */
+  }
+  
+  /* ===== Summary section ===== */
+  
+  .admin-summary-section {
+    margin-top: 16px;
+  }
+  
+  .admin-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding: 8px 80px 0;
+  }  
+  
+  
+  .admin-summary-card {
+    flex: 0 0 190px;
+    min-height: 120px;
+    border-radius: 6px;
+    border: 1px solid #cfcfcf;
+    background: #ffffff;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .admin-summary-label {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .admin-summary-value {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  /* ===== Recent activities table ===== */
+  
+  .admin-table-section {
+    margin-top: 32px;
+    padding-bottom: 40px;
+  }
+  
+  .admin-table-wrapper {
+    padding: 8px 80px 0;
+  }
+  
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border: 1px solid #cfcfcf;
+  }
+  
+  /* table header row */
+  .admin-table thead th {
+    padding: 14px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid #cfcfcf;
+    border-right: 1px solid #cfcfcf;
+  }
+  
+  .admin-table thead th:last-child {
+    border-right: none;
+  }
+  
+  /* table body cells */
+  .admin-table tbody td {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .admin-table tbody td:last-child {
+    border-right: none;
+  }
+  
+  /* empty state row covers whole table area */
+  .admin-table-empty-row td {
+    height: 260px;              /* tall blank area like your wireframe */
+    text-align: center;
+    color: #999999;
+    font-style: italic;
+  }
+  
+  /* ===== Responsive tweaks ===== */
+  @media (max-width: 900px) {
+    .admin-section-title,
+    .admin-summary-grid,
+    .admin-table-wrapper {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  
+    .admin-summary-grid {
+      gap: 16px;
+    }
+  
+    .admin-summary-card {
+      flex: 1 1 calc(50% - 16px);
+    }
+  }
+
+/* ===== Report Found Item – layout inside ClientLayout ===== */
+
+.rf-container {
+  max-width: 820px;
+  margin: 40px auto 60px;
+  padding: 0 24px;
+}
+
+/* Header text */
+.rf-header {
+  margin-bottom: 24px;
+}
+
+.rf-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.rf-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280; /* soft gray text */
+}
+
+/* Form */
+.rf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Each field group */
+.rf-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rf-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.rf-required {
+  color: #ef4444; /* red star */
+}
+
+/* Inputs + textarea */
+.rf-input,
+.rf-textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  background-color: #ffffff;
+}
+
+.rf-input:focus,
+.rf-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* Textarea */
+.rf-textarea {
+  resize: vertical;
+}
+
+/* Select styled like input */
+.rf-select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, #6b7280 50%),
+    linear-gradient(135deg, #6b7280 50%, transparent 50%);
+  background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* Two-column row: Category | Date & Time */
+.rf-row {
+  display: flex;
+  gap: 20px;
+}
+
+.rf-col {
+  flex: 1;
+}
+
+/* Buttons */
+.rf-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.rf-btn {
+    padding: 10px 26px;
+    border-radius: 999px;
+    border: none;
+    background: #111827;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Secondary outline button */
+.rf-btn-secondary {
+    padding: 10px 24px;
+    border-radius: 999px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.rf-btn:hover {
+    opacity: 0.9;
+  }
+  
+  .rf-btn-secondary:hover {
+    background: #f9fafb;
+  }
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .rf-row {
+    flex-direction: column;
+  }
+
+  .rf-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rf-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+
+
+  
