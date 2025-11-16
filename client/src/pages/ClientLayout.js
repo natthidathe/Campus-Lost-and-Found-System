@@ -81,8 +81,8 @@ function ClientLayout({ children }) {
   // Logout functionality
   const handleLogout = async () => {
   try {
-    await signOut();          // ← real Cognito logout
-    navigate("/login");       // back to login page
+    await signOut();          
+    navigate("/login");       
   } catch (error) {
     console.error("Error signing out:", error);
   }

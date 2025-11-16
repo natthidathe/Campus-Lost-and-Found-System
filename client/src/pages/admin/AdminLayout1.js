@@ -87,7 +87,7 @@ function ClientLayout({ children }) {
   const handleLogout = async () => {
   try {
     await signOut();
-    navigate("/login");      // or "/admin/login" if you have that
+    navigate("/login");
   } catch (error) {
     console.error("Error signing out:", error);
   }
@@ -95,7 +95,6 @@ function ClientLayout({ children }) {
 
 
   const handleBellClick = () => {
-    // if already on /notifications → go back
     if (location.pathname === "/notifications") {
       navigate(-1);
     } else {
