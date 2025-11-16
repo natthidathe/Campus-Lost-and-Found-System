@@ -38,6 +38,7 @@ function AdminDashboard() {
       
       const data = await response.json();
       const allItems = data.items || [];
+      const totalItemsCount = allItems.length;
 
       // 1. Calculate Status Summary Counts
       const counts = allItems.reduce((acc, item) => {
@@ -46,19 +47,20 @@ function AdminDashboard() {
           acc.Lost++;
         } else if (status === 'FOUND') {
           acc.Found++;
-        } else if (status === 'RETURNED') {
+        } else if (status === 'RETURNED' || status === 'CLAIMED') { // CLAIMED is treated as Returned for simple dashboard count
           acc.Returned++;
         }
         return acc;
-      }, { Lost: 0, Found: 0, Returned: 0 });
+      }, { Lost: 0, Found: 0, Returned: 0 }); // Removed 'Active' from initial accumulator
 
       setSummaryStats([
+        { label: "Total Items", value: totalItemsCount }, 
         { label: "Lost", value: counts.Lost },
         { label: "Found", value: counts.Found },
         { label: "Returned", value: counts.Returned },
       ]);
       
-      // 3. Calculate Recency Breakdown
+      // 2. Calculate Recency Breakdown
       const recencyCounts = allItems.reduce((acc, item) => {
           if (item.createdAt && isToday(item.createdAt)) {
               acc.today++;
@@ -73,7 +75,7 @@ function AdminDashboard() {
           { label: "Older Items", value: recencyCounts.older },
       ]);
       
-      // 2. Calculate Category Breakdown
+      // 3. Calculate Category Breakdown
       const categoryCounts = allItems.reduce((acc, item) => {
         const category = item.category ? item.category : 'Unknown';
         const key = category.toLowerCase(); 
@@ -110,73 +112,74 @@ function AdminDashboard() {
 
   return (
     <AdminLayout>
-      {/* ===== 1. Status Summary cards (Lost, Found, Returned) ===== */}
-      <section className="admin-summary-section">
-        <h2 className="admin-section-title">Status Summary</h2>
-        {isLoading && <p>Loading statistics...</p>}
-        {error && <p className="error-message">{error}</p>}
-
-        {!isLoading && !error && (
-          <div className="admin-summary-grid">
-            {summaryStats.map((s) => (
-              <div key={s.label} className="admin-summary-card">
-                <div className="admin-summary-label">{s.label}</div>
-                <div className="admin-summary-value">{s.value}</div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Loading/Error Block */}
+      {isLoading && <p>Loading dashboard data...</p>}
+      {error && <p className="error-message">{error}</p>}
       
-      {/* 🚨 2. Item Recency (MOVED UP) 🚨 */}
-      <section className="admin-summary-section">
-        <h2 className="admin-section-title">Item Recency</h2>
-
-        <div className="admin-summary-grid">
-            {recencyBreakdown.map((r) => (
-              <div key={r.label} className="admin-summary-card">
-                <div className="admin-summary-label">{r.label}</div>
-                <div className="admin-summary-value">{r.value}</div>
-              </div>
-            ))}
-        </div>
-      </section>
-
-      {/* ===== 3. Category Breakdown (GRAPHICAL VIEW) ===== */}
-      <section className="admin-table-section">
-        <h2 className="admin-section-title">Item Category Breakdown</h2>
-
-        <div className="admin-chart-wrapper">
-          {isLoading ? (
-            <p>Loading category data...</p>
-          ) : categoryBreakdown.length === 0 ? (
-            <p>No item categories found.</p>
-          ) : (
-            <div className="category-bar-chart">
-              {categoryBreakdown.map((row) => {
-                // Calculate percentage for bar width
-                const barWidth = (row.count / maxCategoryCount) * 100;
-
-                return (
-                  <div key={row.category} className="chart-bar-row">
-                    <div className="chart-label">{row.category}</div>
-                    <div className="chart-bar-container">
-                      <div 
-                        className="chart-bar" 
-                        style={{ width: `${barWidth}%` }}
-                        title={`${row.count} items`}
-                      >
-                        <span className="bar-value">{row.count}</span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+      {/* Only render content if not loading and no error */}
+      {!isLoading && !error && (
+        <>
+          {/* ===== 1. Status and Totals Summary cards ===== */}
+          <section className="admin-summary-section">
+            <h2 className="admin-section-title">Operational Summary</h2>
+            <div className="admin-summary-grid">
+              {summaryStats.map((s) => (
+                <div key={s.label} className="admin-summary-card">
+                  <div className="admin-summary-label">{s.label}</div>
+                  <div className="admin-summary-value">{s.value}</div>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
-      </section>
-      
+          </section>
+
+          {/* 2. Item Recency */}
+          <section className="admin-summary-section">
+            <h2 className="admin-section-title">Item Recency</h2>
+            <div className="admin-summary-grid">
+                {recencyBreakdown.map((r) => (
+                  <div key={r.label} className="admin-summary-card">
+                    <div className="admin-summary-label">{r.label}</div>
+                    <div className="admin-summary-value">{r.value}</div>
+                  </div>
+                ))}
+            </div>
+          </section>
+
+
+          {/* ===== 3. Category Breakdown (GRAPHICAL VIEW) ===== */}
+          <section className="admin-table-section">
+            <h2 className="admin-section-title">Item Category Breakdown </h2>
+
+            <div className="admin-chart-wrapper">
+              {categoryBreakdown.length === 0 ? (
+                <p>No item categories found.</p>
+              ) : (
+                <div className="category-bar-chart">
+                  {categoryBreakdown.map((row) => {
+                    // Calculate percentage for bar width
+                    const barWidth = (row.count / maxCategoryCount) * 100;
+
+                    return (
+                      <div key={row.category} className="chart-bar-row">
+                        <div className="chart-label">{row.category}</div>
+                        <div className="chart-bar-container">
+                          <div 
+                            className="chart-bar" 
+                            style={{ width: `${barWidth}%` }}
+                            title={`${row.count} items`}
+                          >
+                            <span className="bar-value">{row.count}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </section>
+        </>
+      )}
     </AdminLayout>
   );
 }
