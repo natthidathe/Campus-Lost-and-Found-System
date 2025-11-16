@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import "../css/client.css";
 import { FiBell } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { signOut } from "aws-amplify/auth";
+
 
 // Sidebar used in all client pages
 // Sidebar used in all client pages
@@ -77,10 +79,15 @@ function ClientLayout({ children }) {
   const location = useLocation();
 
   // Logout functionality
-  const handleLogout = () => {
-    localStorage.removeItem("authToken"); // remove token if stored
-    navigate("/login");
-  };
+  const handleLogout = async () => {
+  try {
+    await signOut();          // ← real Cognito logout
+    navigate("/login");       // back to login page
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+};
+
 
   const handleBellClick = () => {
     if (location.pathname === "/notifications") {

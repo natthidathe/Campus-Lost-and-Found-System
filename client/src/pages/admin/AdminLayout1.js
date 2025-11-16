@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import "../../css/admin.css";
 import { FiBell } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { signOut } from "aws-amplify/auth";
+
 
 // Sidebar used in all admin pages
 const Sidebar = ({ isOpen, onClose, onLogout }) => {
@@ -82,12 +84,15 @@ function ClientLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleLogout = () => {
-    // clear whatever you use for auth
-    localStorage.removeItem("authToken");
-    // choose your admin login route here:
-    navigate("/login"); // or "/admin/login" if you have that
-  };
+  const handleLogout = async () => {
+  try {
+    await signOut();
+    navigate("/login");      // or "/admin/login" if you have that
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+};
+
 
   const handleBellClick = () => {
     // if already on /notifications → go back
