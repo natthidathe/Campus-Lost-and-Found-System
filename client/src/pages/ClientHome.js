@@ -1,20 +1,17 @@
 // src/pages/client/Home.js
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import ClientLayout from "./ClientLayout";
 
-// ---- mock data ----
-const mockItems = [
-  { id: 1, topic: "Topic", title: "Title", description: "Description" },
-  { id: 2, topic: "Topic", title: "Title", description: "Description" },
-  { id: 3, topic: "Topic", title: "Title", description: "Description" },
-  { id: 4, topic: "Topic", title: "Title", description: "Description" },
-  { id: 5, topic: "Topic", title: "Title", description: "Description" },
-  { id: 6, topic: "Topic", title: "Title", description: "Description" },
-];
+const ALL_ITEMS_API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/GetItem/items"; 
 
 function Home() {
   const navigate = useNavigate();
+
+  // State for the actual items fetched from the API
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // search + filter states
   const [search, setSearch] = useState("");
@@ -22,24 +19,67 @@ function Home() {
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
 
-  const filteredItems = mockItems.filter((item) => {
-    const keyword = search.toLowerCase();
-    const matchesSearch =
-      item.topic.toLowerCase().includes(keyword) ||
-      item.title.toLowerCase().includes(keyword) ||
-      item.description.toLowerCase().includes(keyword);
+  // Function to fetch data from the backend
+  const fetchItems = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      // Fetch data using the live GET /items endpoint
+      const response = await fetch(ALL_ITEMS_API_URL);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      
+      // The GetAllItems Lambda returns the array inside the 'items' key
+      setItems(data.items || []); 
+    } catch (err) {
+      console.error("Error fetching items:", err);
+      setError("Failed to load items. Check the network and API endpoint.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-    // later you can also use type/category/status once your data has those fields
-    return matchesSearch;
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
+  // Apply filtering logic to the fetched items (using DynamoDB field names)
+  const filteredItems = items.filter((item) => {
+    const keyword = search.toLowerCase();
+    
+    const matchesSearch =
+      (item.itemName && item.itemName.toLowerCase().includes(keyword)) ||
+      (item.category && item.category.toLowerCase().includes(keyword)) ||
+      (item.locationLost && item.locationLost.toLowerCase().includes(keyword));
+
+    const matchesType = 
+      type === "all" ||
+      (type === "lost" && item.SK && item.SK.startsWith("LOST#")) ||
+      (type === "found" && item.SK && item.SK.startsWith("FOUND#"));
+
+    const matchesCategory = 
+      category === "all" || 
+      (item.category && item.category.toLowerCase() === category.toLowerCase());
+
+    const matchesStatus = 
+      status === "all" || 
+      (item.status && item.status.toLowerCase() === status.toLowerCase());
+
+    return matchesSearch && matchesType && matchesCategory && matchesStatus;
   });
 
+
+  // --- Render Logic ---
   return (
     <ClientLayout>
       {/* Search */}
       <div className="search-wrapper">
         <input
           className="search-input"
-          placeholder="Search.."
+          placeholder="Search from Item Name"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -64,12 +104,12 @@ function Home() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="all">All Categories</option>
-          <option value="electronics">Electronics</option>
-          <option value="clothing">Clothing</option>
-          <option value="accessories">Accessories</option>
-          <option value="books">Books</option>
-          <option value="keys">Keys</option>
-          <option value="other">Other</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Books">Books</option>
+          <option value="Keys">Keys</option>
+          <option value="Other">Other</option>
         </select>
 
         <select
@@ -78,7 +118,8 @@ function Home() {
           onChange={(e) => setStatus(e.target.value)}
         >
           <option value="all">All Status</option>
-          <option value="active">Active</option>
+          <option value="lost">LOST</option> 
+          <option value="found">FOUND</option>
           <option value="claimed">Claimed</option>
           <option value="returned">Returned</option>
         </select>
@@ -89,18 +130,27 @@ function Home() {
         <h2>All Item List</h2>
       </div>
 
-      {/* Cards grid */}
+      {/* Loading, Error, or Cards grid */}
+      {isLoading && <p>Loading items...</p>}
+      {error && <p className="error-message">Error: {error}</p>}
+
+      {!isLoading && !error && filteredItems.length === 0 && (
+        <p>No items found matching your criteria.</p>
+      )}
+
       <div className="card-grid">
-        {filteredItems.map((item) => (
+        {!isLoading && !error && filteredItems.map((item) => (
           <div
-            key={item.id}
+            key={item.PK} // Use the Partition Key (PK) as the unique key
             className="card"
-            onClick={() => navigate(`/item/${item.id}`, { state: item })}
+            // Navigate to the detail page using the PK
+            onClick={() => navigate(`/item/${item.PK}`, { state: item })} 
             style={{ cursor: "pointer" }}
           >
-            <div className="card-topic">{item.topic}</div>
-            <div className="card-title">{item.title}</div>
-            <div className="card-description">{item.description}</div>
+            {/* Displaying DynamoDB fields: category, itemName, status */}
+            <div className="card-topic">Category: {item.category || 'N/A'}</div>
+            <div className="card-title">Item: {item.itemName || 'Untitled'}</div>
+            <div className="card-description">Status: {item.status}</div>
           </div>
         ))}
       </div>

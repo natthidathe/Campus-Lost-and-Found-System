@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import ClientLayout from "./AdminLayout1";
 import "../../css/admin.css";
 
-// The API URL should be pointing to the public endpoint
-const API_URL = "https://ptd263g5s5.execute-api.us-east-1.amazonaws.com/ItemFound/items/found"; 
+// The API URL 
+const API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/ReportFound/items/found"; 
 
 
 function ReportFound() {

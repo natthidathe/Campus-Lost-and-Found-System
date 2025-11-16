@@ -1,33 +1,62 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ClientLayout from "./AdminLayout1";
+
+// PLACEHOLDER: Define your API URL for updating item status 
+const UPDATE_ITEM_STATUS_API_URL = "YOUR_NEW_API_GATEWAY_URL_FOR_STATUS_UPDATE"; 
 
 function Identification() {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 🚨 CRITICAL FIX: Retrieve the item object passed from AdminDetail 🚨
+  const itemToUpdate = location.state?.item; 
 
+  // --- Form States ---
   const [name, setName] = useState("");
   const [role, setRole] = useState("student");
   const [studentId, setStudentId] = useState("");
   const [tel, setTel] = useState("");
   const [files, setFiles] = useState([]);
-
+  
+  // 🚨 FIXED: Determine the intended status action silently 🚨
+  const statusAction = itemToUpdate?.status === 'FOUND' ? 'CLAIMED' : 'RETURNED'; 
+  
+  // --- UI States ---
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+
+  // Check if item data is missing
+  if (!itemToUpdate || !itemToUpdate.PK) {
+    return (
+      <ClientLayout>
+        <div className="id-container">
+          <p className="error-message">Error: Item context is missing. Cannot process claim.</p>
+          <button className="btn-secondary" onClick={() => navigate('/admin/items')}>
+            Go to Item List
+          </button>
+        </div>
+      </ClientLayout>
+    );
+  }
 
   const handleFileChange = (e) => {
     const list = Array.from(e.target.files || []);
     setFiles(list);
   };
 
-  // when user clicks Submit → just open popup
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const payload = {
+      PK: itemToUpdate.PK, // Include the item PK
       name,
       role,
       studentId: role === "student" ? studentId : "",
       tel,
       filesCount: files.length,
+      newStatus: statusAction, // Status to update (CLAIMED or RETURNED)
     };
 
     console.log("Identification payload (before confirm):", payload);
@@ -39,11 +68,43 @@ function Identification() {
   };
 
 
-  const handleConfirmYes = () => {
+  const handleConfirmYes = async () => {
     setShowConfirm(false);
-    // later you can really send payload to backend here
-    console.log("Identification confirmed & submitted");
-    navigate("/admin/items");
+    setLoading(true);
+
+    const submissionPayload = {
+      PK: itemToUpdate.PK, 
+      claimantName: name,
+      claimantRole: role,
+      claimantId: role === "student" ? studentId : null,
+      claimantTel: tel,
+      newStatus: statusAction,
+      // You would include files/upload logic here
+    };
+
+    try {
+        // 🚨 Placeholder for actual API call 🚨
+        const res = await fetch(UPDATE_ITEM_STATUS_API_URL, {
+            method: 'POST', 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(submissionPayload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || "Failed to update item status.");
+        }
+
+        console.log("Identification confirmed & submitted successfully.");
+        alert(`Item ${itemToUpdate.itemName} successfully marked as ${statusAction}.`);
+        navigate("/admin/items");
+
+    } catch (err) {
+        console.error("Submission error:", err);
+        setSubmitError(err.message || "An unknown error occurred during submission.");
+        setLoading(false);
+    }
   };
 
 
@@ -54,7 +115,19 @@ function Identification() {
   return (
     <ClientLayout>
       <div className="id-container">
-        <h1 className="id-page-title">Identification</h1>
+        <h1 className="id-page-title">Finalize Claim / Return</h1>
+
+        {/* Item Context Section (NEW) */}
+        <section className="id-section">
+          <h2 className="id-section-title">Item Details</h2>
+          <p className="id-context-info">
+            Item: <strong>{itemToUpdate.itemName}</strong> ({itemToUpdate.PK.substring(5, 13)}...)
+            <br />
+            Reported as: <strong>{itemToUpdate.category}</strong>. Current Status: <strong>{itemToUpdate.status}</strong>
+            <br />
+           
+          </p>
+        </section>
 
         <section className="id-section">
           <h2 className="id-section-title">Owner Information</h2>
@@ -67,7 +140,7 @@ function Identification() {
               </label>
               <input
                 className="text-input"
-                placeholder="Your name"
+                placeholder="Owner's name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -94,7 +167,7 @@ function Identification() {
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
                   disabled={role !== "student"}
-                  required
+                  required={role === "student"}
                 />
                 <span className="required">*</span>
               </div>
@@ -144,17 +217,21 @@ function Identification() {
               </div>
             </div>
 
+            {submitError && <p className="error-message">{submitError}</p>}
+
+
             {/* Buttons */}
             <div className="id-actions">
               <button
                 type="button"
                 className="btn-secondary"
                 onClick={handleCancel}
+                disabled={loading}
               >
                 cancel
               </button>
-              <button type="submit" className="btn-primary">
-                Submit
+              <button type="submit" className="btn-primary" disabled={loading}>
+                {loading ? "Processing..." : "Submit"}
               </button>
             </div>
           </form>
@@ -174,7 +251,7 @@ function Identification() {
               ×
             </button>
             <div className="confirm-body">
-              <p className="confirm-text">Confirm Submit ?</p>
+              <p className="confirm-text">Confirm marking item **{itemToUpdate.itemName}** as **{statusAction}**?</p>
               <div className="confirm-actions">
                 <button
                   type="button"
