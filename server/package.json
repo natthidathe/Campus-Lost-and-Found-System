@@ -10,8 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.932.0",
+    "@aws-sdk/lib-dynamodb": "^3.932.0",
     "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "uuid": "^13.0.0"
   },
