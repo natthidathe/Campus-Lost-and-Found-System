@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Authenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 import '@aws-amplify/ui-react/styles.css';
+import { fetchAuthSession } from 'aws-amplify/auth';
 
 // This is the function that will run when a user tries to sign up.
 // We are overriding the default Amplify behavior.
@@ -38,12 +39,37 @@ const customSignUpHandler = async (formData) => {
 
 
 // This is the redirect component (no change here)
+// This is the redirect component (the MODIFIED version)
 function RedirectToHome() {
   const navigate = useNavigate();
+  
   useEffect(() => {
-    navigate('/home');
+    async function checkUserRole() {
+      try {
+        // 1. Get the current user's session token
+        const { tokens } = await fetchAuthSession();
+        
+        // 2. Extract the groups/roles from the ID token (Cognito stores roles in 'cognito:groups')
+        const groups = tokens.idToken.payload['cognito:groups'] || []; 
+        
+        // 3. Determine the destination based on the group
+        if (groups.includes('admin') || groups.includes('staff')) {
+          // If the user belongs to the Admin or Staff group, go to the Admin Dashboard
+          navigate('/admin/dashboard');
+        } else {
+          // Default: If Student or unassigned, go to the Student Home page
+          navigate('/home');
+        }
+      } catch (error) {
+        console.error("Error checking user role:", error);
+        // Fallback safety redirect
+        navigate('/home');
+      }
+    }
+    checkUserRole();
   }, [navigate]);
-  return <div>Loading...</div>;
+  
+  return <div>Authenticating and checking role...</div>;
 }
 
 // This is your main Login component
