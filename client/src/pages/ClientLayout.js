@@ -5,7 +5,8 @@ import { FiBell } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 // Sidebar used in all client pages
-const Sidebar = ({ isOpen, onClose }) => {
+// Sidebar used in all client pages
+const Sidebar = ({ isOpen, onClose, onLogout }) => {
   const location = useLocation();
 
   const isActive = (path) =>
@@ -15,7 +16,6 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* click outside to close */}
       <div
         className={`sidebar-overlay ${isOpen ? "open" : ""}`}
         onClick={onClose}
@@ -33,6 +33,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         </div>
 
+        {/* make this a flex column that fills height */}
         <div className="sidebar-menu">
           <Link
             to="/home"
@@ -41,6 +42,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           >
             Home
           </Link>
+
           <Link
             to="/report-lost"
             className={isActive("/report-lost")}
@@ -48,11 +50,25 @@ const Sidebar = ({ isOpen, onClose }) => {
           >
             Report
           </Link>
+
+          {/* --- pinned at bottom --- */}
+          <div className="sidebar-bottom">
+            <button
+              className="sidebar-item logout-button"
+              onClick={() => {
+                onLogout();
+                onClose();
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
     </>
   );
 };
+
 
 // Reusable layout wrapper for all client pages
 function ClientLayout({ children }) {
@@ -60,8 +76,13 @@ function ClientLayout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Logout functionality
+  const handleLogout = () => {
+    localStorage.removeItem("authToken"); // remove token if stored
+    navigate("/login");
+  };
+
   const handleBellClick = () => {
-    // if already on /notifications → go back
     if (location.pathname === "/notifications") {
       navigate(-1);
     } else {
@@ -75,6 +96,7 @@ function ClientLayout({ children }) {
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        onLogout={handleLogout}
       />
 
       {/* Top bar */}
@@ -90,13 +112,11 @@ function ClientLayout({ children }) {
         </button>
 
         <div className="topbar-right">
-          {/* home icon – go to /home */}
           <button
             className="icon-button home-outline"
             aria-label="Home"
             onClick={() => navigate("/home")}
           />
-          {/* bell icon */}
           <button
             className="icon-button"
             onClick={handleBellClick}
@@ -106,7 +126,7 @@ function ClientLayout({ children }) {
         </div>
       </header>
 
-      {/* Main content area – page-specific content goes here */}
+      {/* Main content area */}
       <main className="content">
         <div className="content-inner">{children}</div>
       </main>

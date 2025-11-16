@@ -520,3 +520,34 @@
     font-size: 14px;
   }
   
+  .sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  flex: 1;           /* take full height */
+}
+
+.sidebar-bottom {
+  margin-top: auto;  /* pushes logout down */
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #d9534f;
+}
+
+.logout-button:hover {
+  color: #b52b27;
+}

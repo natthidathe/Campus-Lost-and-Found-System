@@ -747,3 +747,37 @@
     font-size: 30px;
     line-height: 0;
   }
+
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar menu fills remaining space */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  flex: 1;          
+}
+
+.sidebar-bottom {
+  margin-top: auto;      
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #d9534f;
+}
+
+.logout-button:hover {
+  color: #b52b27;
+}

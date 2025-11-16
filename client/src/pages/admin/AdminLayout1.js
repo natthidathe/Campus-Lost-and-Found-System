@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "../../css/admin.css"
+import "../../css/admin.css";
 import { FiBell } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-// Sidebar used in all client pages
-const Sidebar = ({ isOpen, onClose }) => {
+// Sidebar used in all admin pages
+const Sidebar = ({ isOpen, onClose, onLogout }) => {
   const location = useLocation();
 
   const isActive = (path) =>
@@ -32,6 +32,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           </button>
         </div>
 
+        {/* flex column so we can push logout to bottom */}
         <div className="sidebar-menu">
           <Link
             to="/admin/dashboard"
@@ -40,6 +41,7 @@ const Sidebar = ({ isOpen, onClose }) => {
           >
             Home
           </Link>
+
           <Link
             to="/admin/items"
             className={isActive("/admin/items")}
@@ -47,24 +49,45 @@ const Sidebar = ({ isOpen, onClose }) => {
           >
             Item List
           </Link>
+
           <Link
             to="/admin/report-found"
-            className={isActive("/report-found")}
+            className={isActive("/admin/report-found")}
             onClick={onClose}
           >
             Report
           </Link>
+
+          {/* ---- Logout pinned at bottom ---- */}
+          <div className="sidebar-bottom">
+            <button
+              className="sidebar-item logout-button"
+              onClick={() => {
+                onLogout();
+                onClose();
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
     </>
   );
 };
 
-// Reusable layout wrapper for all client pages
+// Reusable layout wrapper for all admin pages
 function ClientLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogout = () => {
+    // clear whatever you use for auth
+    localStorage.removeItem("authToken");
+    // choose your admin login route here:
+    navigate("/login"); // or "/admin/login" if you have that
+  };
 
   const handleBellClick = () => {
     // if already on /notifications → go back
@@ -81,6 +104,7 @@ function ClientLayout({ children }) {
       <Sidebar
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        onLogout={handleLogout}
       />
 
       {/* Top bar */}
@@ -96,17 +120,14 @@ function ClientLayout({ children }) {
         </button>
 
         <div className="topbar-right">
-          {/* home icon – go to /home */}
+          {/* home icon – go to admin dashboard */}
           <button
             className="icon-button home-outline"
             aria-label="Home"
-            onClick={() => navigate("/home")}
+            onClick={() => navigate("/admin/dashboard")}
           />
           {/* bell icon */}
-          <button
-            className="icon-button"
-            onClick={handleBellClick}
-          >
+          <button className="icon-button" onClick={handleBellClick}>
             <FiBell size={22} />
           </button>
         </div>
@@ -121,4 +142,3 @@ function ClientLayout({ children }) {
 }
 
 export default ClientLayout;
-
