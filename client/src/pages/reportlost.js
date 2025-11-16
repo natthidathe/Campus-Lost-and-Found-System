@@ -12,9 +12,10 @@ function ReportLost() {
   const [category, setCategory] = useState("");
   const [locationLost, setLocationLost] = useState("");
   const [dateTimeLost, setDateTimeLost] = useState("");
+  const [studentId, setStudentId] = useState("");   // ⭐ NEW state
   const [loading, setLoading] = useState(false);
 
-  // Your API endpoint (no trailing slash)
+  // API endpoint
   const API_URL =
     "https://ptd263g5s5.execute-api.us-east-1.amazonaws.com/reportLostItem";
 
@@ -22,59 +23,31 @@ function ReportLost() {
     e.preventDefault();
     setLoading(true);
 
-    console.log("======= DEBUG FORM SUBMISSION =======");
-console.log("Item Name:", itemName);
-console.log("Category:", category);
-console.log("Location Lost:", locationLost);
-console.log("DateTime Lost:", dateTimeLost);
-console.log("Using userId:", "6522771045");
+    // Make payload identical to Lambda test event
+    const payload = {
+      itemName,
+      category,
+      locationLost,
+      dateTimeLost,
+      userId: studentId,     // ⭐ use studentId here
+    };
 
-const payload = {
-  itemName,
-  category,
-  locationLost,
-  dateTimeLost,
-  userId: "6522771045"
-};
-
-console.log("Payload object:", payload);
-console.log("JSON.stringify(payload):", JSON.stringify(payload));
-
-console.log("Final body being sent:");
-console.log(
-  JSON.stringify({
-    body: JSON.stringify(payload),
-  })
-);
-
-console.log("API URL:", API_URL);
-console.log("=====================================");
-
+    console.log("Sending to API:", payload);
 
     try {
-      // Must match Lambda EXACTLY — same as Test Event format
-      const payload = {
-        itemName,
-        category,
-        locationLost,
-        dateTimeLost,
-        userId: "6522771045" // TEMP until you add real login
-      };
-
-      console.log("Sending payload:", payload);
-
       const res = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        // ⭐ IMPORTANT: Must wrap "body" like Lambda test format
         body: JSON.stringify({
-          body: JSON.stringify(payload),  // ⭐ EXACTLY like Lambda Test JSON
+          body: JSON.stringify(payload),
         }),
       });
 
       const data = await res.json();
-      console.log("Response from API:", data);
+      console.log("API Response:", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Failed to submit lost item");
@@ -90,18 +63,29 @@ console.log("=====================================");
     }
   };
 
-  const handleCancel = () => {
-    navigate(-1);
-  };
-
   return (
     <ClientLayout>
       <div className="report-container">
         <h1 className="page-title">Report Lost Item</h1>
-        <p className="page-subtitle">Telling us what you lost.</p>
+        <p className="page-subtitle">Tell us what you lost.</p>
 
         <form className="report-form" onSubmit={handleSubmit}>
-          {/* Item name */}
+          
+          {/* Student ID (new input) */}
+          <div className="form-group">
+            <label className="form-label">
+              Student ID <span className="required">*</span>
+            </label>
+            <input
+              className="text-input"
+              placeholder="e.g., 6522771045"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Item Name */}
           <div className="form-group">
             <label className="form-label">
               Item Name <span className="required">*</span>
@@ -115,7 +99,7 @@ console.log("=====================================");
             />
           </div>
 
-          {/* Category + Date & Time Lost */}
+          {/* Category + Date */}
           <div className="form-row">
             <div className="form-group half">
               <label className="form-label">
@@ -164,7 +148,7 @@ console.log("=====================================");
             </label>
             <input
               className="text-input"
-              placeholder="e.g., Main Cafeteria, near the coffee station"
+              placeholder="e.g., SIIT Main Building Lobby"
               value={locationLost}
               onChange={(e) => setLocationLost(e.target.value)}
               required
@@ -176,10 +160,11 @@ console.log("=====================================");
             <button type="submit" className="submit-btn" disabled={loading}>
               {loading ? "Submitting..." : "Submit Report"}
             </button>
-            <button type="button" className="cancel-btn" onClick={handleCancel}>
+            <button type="button" className="cancel-btn" onClick={() => navigate(-1)}>
               Cancel
             </button>
           </div>
+
         </form>
       </div>
     </ClientLayout>
