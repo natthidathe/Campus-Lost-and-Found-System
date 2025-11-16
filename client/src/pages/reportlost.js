@@ -17,34 +17,32 @@ function ReportLost() {
 
   // API endpoint
   const API_URL =
-    "https://ptd263g5s5.execute-api.us-east-1.amazonaws.com/reportLostItem";
+    "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/reportLostItem";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+      e.preventDefault();
+      setLoading(true);
 
-    // Make payload identical to Lambda test event
-    const payload = {
-      itemName,
-      category,
-      locationLost,
-      dateTimeLost,
-      userId: studentId,     // ⭐ use studentId here
-    };
+      // Make payload identical to Lambda test event
+      const payload = {
+        itemName,
+        category,
+        locationLost,
+        dateTimeLost,
+        userId: studentId,     // ⭐ This is the key field
+      };
 
-    console.log("Sending to API:", payload);
+      console.log("Sending to API:", payload);
 
-    try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        // ⭐ IMPORTANT: Must wrap "body" like Lambda test format
-        body: JSON.stringify({
-          body: JSON.stringify(payload),
-        }),
-      });
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // ⭐ FIX: ONLY STRINGIFY THE PAYLOAD ONCE
+          body: JSON.stringify(payload), // <--- THIS IS THE CORRECT WAY
+        });
 
       const data = await res.json();
       console.log("API Response:", data);
