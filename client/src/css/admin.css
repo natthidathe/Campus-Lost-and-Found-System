@@ -696,3 +696,78 @@
 .review-btn:hover {
     color: var(--color-blue-secondary);
 }
+
+/* --- OwnerInfoList Card Styles (Must be added to admin.css) --- */
+
+/* Base style for this specific card type */
+.owner-card-style {
+    /* Base card styling is assumed from .card, we just enhance it */
+    padding: 20px;
+    border-left: 5px solid #3b82f6; /* Blue emphasis on the side */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Spacing between rows */
+    box-sizing: border-box;
+}
+
+/* Claimant Name */
+.owner-claimant-name {
+    font-size: 1.4em; /* Larger title */
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 5px;
+}
+
+/* Request ID Metadata */
+.owner-request-id-meta {
+    font-size: 0.75em;
+    color: #6b7280;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 5px;
+}
+
+/* Detail Rows (for Student ID, Tel, Submitted) */
+.owner-detail-row {
+    font-size: 0.9em;
+    color: #4b5563;
+    display: flex;
+    justify-content: space-between; /* Space out label and value */
+}
+
+.owner-detail-label {
+    font-weight: 600;
+    color: #1f2937;
+    min-width: 100px; /* Aligns the values */
+}
+
+.owner-detail-value {
+    font-weight: 400;
+}
+
+/* Proof Status Container */
+.owner-proof-status {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Proof Attached Badge */
+.proof-attached {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 700;
+    background-color: #d1f7e0; /* Light green background */
+    color: #00703c; /* Dark green text */
+}
+
+/* Proof Missing Badge */
+.proof-missing {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 700;
+    background-color: #ffe0e0; /* Light red background */
+    color: #a00000; /* Dark red text */
+}
