@@ -33,6 +33,12 @@ const formatDateTime = (isoString) => {
 function AdminDetail() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const getItemIdDisplay = (pk) => {
+  if (!pk) return 'N/A';
+  // Remove 'ITEM#' prefix and show only the first 8 characters
+  return pk.replace('ITEM#', '').substring(0, 8);
+};
   // The item object is passed directly via the 'state' property during navigation
   const item = location.state;
 
@@ -59,6 +65,8 @@ function AdminDetail() {
     <AdminLayout>
       <div className="detail-page">
         <h1 className="detail-title">{item.itemName || 'Untitled Item'} Details</h1>
+        
+        <div className="detail-row">Item ID: {item.PK}</div>
 
         {/* Item Status Row */}
         <div className="detail-row">

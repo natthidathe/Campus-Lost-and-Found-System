@@ -50,6 +50,13 @@ function Home() {
   const filteredItems = items.filter((item) => {
     const keyword = search.toLowerCase();
     
+    const itemStatus = item.status ? item.status.toLowerCase() : '';
+
+    // 🚨 SYNC FIX: Exclude any item explicitly marked as 'DELETED' or 'ARCHIVED' 🚨
+    if (itemStatus === 'deleted' || itemStatus === 'archived') {
+        return false;
+    }
+    
     const matchesSearch =
       (item.itemName && item.itemName.toLowerCase().includes(keyword)) ||
       (item.category && item.category.toLowerCase().includes(keyword)) ||

@@ -1,4 +1,3 @@
-// src/pages/client/Home.js (for admin/items)
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "./AdminLayout1";
@@ -20,6 +19,13 @@ function Home() {
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("all");
 
+  const getItemIdDisplay = (pk) => {
+    if (!pk) return 'N/A';
+    // Remove 'ITEM#' prefix and show only the first 8 characters
+    return pk.replace('ITEM#', '').substring(0, 8);
+  };
+
+
   // Function to fetch data from the backend
   const fetchItems = useCallback(async () => {
     setIsLoading(true);
@@ -32,6 +38,7 @@ function Home() {
       const data = await response.json();
       
       // The GetAllItems Lambda returns the array inside the 'items' key
+      // Items are set directly here, filtering happens below.
       setItems(data.items || []); 
     } catch (err) {
       console.error("Error fetching items:", err);
@@ -49,13 +56,19 @@ function Home() {
   // Apply filtering logic to the fetched items (using DynamoDB field names)
   const filteredItems = items.filter((item) => {
     const keyword = search.toLowerCase();
+    const itemStatus = item.status ? item.status.toLowerCase() : '';
+
+    // 🚨 SYNC FIX: Exclude any item explicitly marked as 'DELETED' or 'ARCHIVED' 🚨
+    if (itemStatus === 'deleted' || itemStatus === 'archived') {
+        return false;
+    }
     
     // Search based on actual DynamoDB fields: itemName, category, locationLost
     const matchesSearch =
       (item.itemName && item.itemName.toLowerCase().includes(keyword)) ||
       (item.category && item.category.toLowerCase().includes(keyword)) ||
       (item.locationLost && item.locationLost.toLowerCase().includes(keyword));
-
+      (item.PK && item.PK.toLowerCase().includes(keyword));
     // Filter by Type (Derived from SK: LOST# or FOUND#)
     const matchesType = 
       type === "all" ||
@@ -68,11 +81,9 @@ function Home() {
       (item.category && item.category.toLowerCase() === category.toLowerCase());
 
     // Filter by Status
-    // Note: If you want to use 'active', you might need logic to map 'LOST'/'FOUND' to 'active' status.
-    // For now, we match against the stored status field (e.g., 'LOST', 'FOUND', 'Claimed', 'Returned').
     const matchesStatus = 
       status === "all" || 
-      (item.status && item.status.toLowerCase() === status.toLowerCase());
+      itemStatus === status.toLowerCase();
 
     return matchesSearch && matchesType && matchesCategory && matchesStatus;
   });
@@ -139,7 +150,7 @@ function Home() {
       {error && <p className="error-message">Error: {error}</p>}
 
       {!isLoading && !error && filteredItems.length === 0 && (
-        <p>No items found matching your criteria.</p>
+        <p> </p>
       )}
       
       {/* Cards grid */}
@@ -155,6 +166,7 @@ function Home() {
             {/* Displaying DynamoDB fields: category, itemName, status */}
             <div className="card-topic">Category: {item.category || 'N/A'}</div>
             <div className="card-title">Item: {item.itemName || 'Untitled'}</div>
+            <div className="card-description">ID: {item.PK}</div>
             <div className="card-description">Status: {item.status}</div>
           </div>
         ))}
