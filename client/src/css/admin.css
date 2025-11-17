@@ -771,3 +771,111 @@
     background-color: #ffe0e0; /* Light red background */
     color: #a00000; /* Dark red text */
 }
+
+.review-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it is above all other content */
+    backdrop-filter: blur(2px);
+}
+
+.review-modal-content {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 90vh; /* Limit height for scrollability */
+    overflow-y: auto;
+}
+
+.review-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.review-modal-close:hover {
+    color: #333;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.modal-request-id {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Detail Grid for Key/Value Pairs */
+.modal-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Label (1 part) and Value (2 parts) */
+    gap: 10px 20px;
+    margin-bottom: 20px;
+}
+
+.modal-detail-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    white-space: nowrap;
+}
+
+.modal-detail-value {
+    font-size: 14px;
+    color: #4b5563;
+    word-break: break-word; /* Prevents long keys from breaking layout */
+}
+
+.modal-detail-value.font-bold {
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Divider for visual grouping */
+.modal-divider {
+    grid-column: 1 / span 2;
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 5px 0;
+}
+
+/* Modal Action Buttons */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.verification-proof-image {
+    max-width: 100%; /* Ensure image fits container on all screens */
+    height: auto;
+    display: block;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    object-fit: contain; /* Ensures the entire image is visible without cropping */
+}
