@@ -74,7 +74,7 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
             className={isActive("/admin/matching")}
             onClick={onClose}
           >
-            Matching Lists
+            Matching List
           </Link>
 
           {/* ---- Logout pinned at bottom ---- */}

@@ -135,7 +135,7 @@ function OwnerList() {
     return (
         <AdminLayout>
             <div className="admin-content-container">
-                <h1 className="admin-section-title">Owner Verification Requests ({requests.length})</h1>
+                <h1 className="admin-section-title">Owner Verification Lists ({requests.length})</h1>
                 <p className="text-gray-600 mb-6 border-b pb-3">
                     Review pending claims to verify the identity of the user attempting to claim a lost item.
                 </p>
