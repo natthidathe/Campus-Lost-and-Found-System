@@ -59,6 +59,13 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
           >
             Report
           </Link>
+          <Link
+            to="/admin/ownerlist"
+            className={isActive("/admin/ownerlist")}
+            onClick={onClose}
+          >
+            Owner List
+          </Link>
 
           {/* ---- Logout pinned at bottom ---- */}
           <div className="sidebar-bottom">
