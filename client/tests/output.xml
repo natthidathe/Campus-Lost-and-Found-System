@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.3.2 (Python 3.12.3 on win32)" generated="2025-11-18T04:05:27.436007" rpa="false" schemaversion="5">
+<suite id="s1" name="LostAndFoundWebTests" source="C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\LostAndFoundWebTests.robot">
+<kw name="Setup Environment" type="SETUP">
+<kw name="Set Selenium Implicit Wait" owner="SeleniumLibrary">
+<arg>10s</arg>
+<doc>Sets the implicit wait value used by Selenium.</doc>
+<status status="PASS" start="2025-11-18T04:05:27.614351" elapsed="0.001000"/>
+</kw>
+<kw name="Create File" owner="OperatingSystem">
+<msg time="2025-11-18T04:05:27.615351" level="INFO" html="true">Created file '&lt;a href="file://C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\test_proof.png"&gt;C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\test_proof.png&lt;/a&gt;'.</msg>
+<arg>${IMAGE_PATH}</arg>
+<arg>dummy content for image upload test</arg>
+<doc>Creates a file with the given content and encoding.</doc>
+<status status="PASS" start="2025-11-18T04:05:27.615351" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:27.614351" elapsed="0.001000"/>
+</kw>
+<test id="s1-t1" name="Test Case 1: Student Complete Workflow (Report -&gt; Home -&gt; Detail)" line="59">
+<kw name="Go To Login Page">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:27.616351" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000/login'.</msg>
+<arg>${LOGIN_URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:05:27.616351" elapsed="1.670120"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.286471" elapsed="0.024000"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.310471" elapsed="0.012999"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:27.616351" elapsed="1.707119"/>
+</kw>
+<kw name="Login As Student">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.324470" elapsed="0.010999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:29.335469" level="INFO">Typing text 'student@g.siit.tu.ac.th' into text field 'name=username'.</msg>
+<arg>${EMAIL_INPUT}</arg>
+<arg>${STUDENT_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.335469" elapsed="0.140001"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:29.476471" level="INFO">Typing text 'Burger5$' into text field 'name=password'.</msg>
+<arg>${PASSWORD_INPUT}</arg>
+<arg>${STUDENT_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.475470" elapsed="0.071000"/>
+</kw>
+<kw name="Submit Form" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:29.546470" level="INFO">Submitting form 'xpath=//form'.</msg>
+<arg>${LOGIN_FORM}</arg>
+<doc>Submits a form identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.546470" elapsed="0.085000"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${BASE_URL}/home</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:05:29.631470" elapsed="3.261090"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:29.324470" elapsed="3.568090"/>
+</kw>
+<kw name="Go To Report Lost Page">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:32.893561" level="INFO">Opening url 'http://localhost:3000/report-lost'</msg>
+<arg>${REPORT_LOST_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:05:32.893561" elapsed="0.012997"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Report Lost Item</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:32.906558" elapsed="0.093001"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:32.892560" elapsed="0.106999"/>
+</kw>
+<kw name="Report Lost Item Successfully">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.000560" level="INFO">Typing text '9999999999' into text field 'xpath=//input[@placeholder="e.g., 6522771045"]'.</msg>
+<arg>xpath=//input[@placeholder="e.g., 6522771045"]</arg>
+<arg>${STUDENT_ID_VAL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.000560" elapsed="0.073999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.074559" level="INFO">Typing text 'Blue Backpack Lost (E2E)' into text field 'xpath=//input[@placeholder="e.g., iPhone 13 Pro"]'.</msg>
+<arg>xpath=//input[@placeholder="e.g., iPhone 13 Pro"]</arg>
+<arg>${LOST_ITEM_NAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.074559" elapsed="0.104709"/>
+</kw>
+<kw name="Select From List By Value" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.179268" level="INFO">Selecting options from selection list 'xpath=(//select[@class="select-input"])[1]' by value Accessories.</msg>
+<arg>xpath=(//select[@class="select-input"])[1]</arg>
+<arg>Accessories</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.179268" elapsed="0.044999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.225268" level="INFO">Typing text '2025-11-18T14:30' into text field 'xpath=//input[@type="datetime-local"]'.</msg>
+<arg>xpath=//input[@type="datetime-local"]</arg>
+<arg>${DATETIME_LOST}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.224267" elapsed="0.057073"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-11-18T04:05:33.781533" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.281340" elapsed="0.500193"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.781533" level="INFO">Typing text 'SIIT Main Building' into text field 'xpath=//input[@placeholder="e.g., SIIT Main Building Lobby"]'.</msg>
+<arg>xpath=//input[@placeholder="e.g., SIIT Main Building Lobby"]</arg>
+<arg>SIIT Main Building</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.781533" elapsed="0.087802"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${LOST_SUBMIT_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.869335" elapsed="0.008999"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.879334" level="INFO">Clicking element 'xpath=//button[@type="submit" and text()="Submit Report"]'.</msg>
+<arg>${LOST_SUBMIT_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.879334" elapsed="0.030001"/>
+</kw>
+<kw name="Alert Should Be Present" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:33.910335" level="INFO">HANDLE::&lt;class 'NoneType'&gt;::None</msg>
+<arg>Lost item reported successfully!</arg>
+<doc>Verifies that an alert is present and by default, accepts it.</doc>
+<status status="PASS" start="2025-11-18T04:05:33.910335" elapsed="1.004613"/>
+</kw>
+<doc>Fills form and ensures success alert appears.</doc>
+<status status="PASS" start="2025-11-18T04:05:32.999559" elapsed="1.915389"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${BASE_URL}/home</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:05:34.915949" elapsed="0.008999"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>All Item List</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:34.924948" elapsed="0.011001"/>
+</kw>
+<kw name="Click Item Card On List Page">
+<kw name="Wait Until Page Does Not Contain" owner="SeleniumLibrary">
+<arg>Loading items...</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until ``text`` disappears from the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:34.935949" elapsed="10.882620"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-11-18T04:05:45.819570" level="INFO">${CARD_TITLE_LOCATOR} = xpath=//div[contains(@class, "card-title") and contains(., "Blue Backpack Lost (E2E)")]</msg>
+<var>${CARD_TITLE_LOCATOR}</var>
+<arg>xpath=//div[contains(@class, "card-title") and contains(., "${ITEM_NAME_TO_CLICK}")]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-11-18T04:05:45.819570" elapsed="0.000000"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:45.819570" elapsed="0.010001"/>
+</kw>
+<kw name="Scroll Element Into View" owner="SeleniumLibrary">
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<doc>Scrolls the element identified by ``locator`` into view.</doc>
+<status status="PASS" start="2025-11-18T04:05:45.829571" elapsed="0.260758"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:46.091330" level="INFO">Clicking element 'xpath=//div[contains(@class, "card-title") and contains(., "Blue Backpack Lost (E2E)")]'.</msg>
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.090329" elapsed="0.037999"/>
+</kw>
+<arg>${LOST_ITEM_NAME}</arg>
+<doc>Waits for loading to finish, scrolls to the card title, and clicks it.</doc>
+<status status="PASS" start="2025-11-18T04:05:34.935949" elapsed="11.193381"/>
+</kw>
+<kw name="Verify Item Details Page">
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${EXPECTED_NAME} Details</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.129330" elapsed="0.010998"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${EXPECTED_LOCATION}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.140328" elapsed="0.009000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Date Lost/Found:</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.149328" elapsed="0.010000"/>
+</kw>
+<arg>${LOST_ITEM_NAME}</arg>
+<arg>SIIT Main Building</arg>
+<doc>Verifies we are on the detail page and see correct info.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.129330" elapsed="0.029998"/>
+</kw>
+<kw name="Logout User">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${MENU_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.160328" elapsed="0.008001"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:46.169329" level="INFO">Clicking element 'xpath=//button[@aria-label="Menu"]'.</msg>
+<arg>${MENU_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.168329" elapsed="0.031001"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${LOGOUT_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.199330" elapsed="0.008998"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:46.208328" level="INFO">Clicking element 'xpath=//button[contains(@class, "logout-button")]'.</msg>
+<arg>${LOGOUT_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.208328" elapsed="0.031480"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${LOGIN_URL}</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:05:46.239808" elapsed="0.816538"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:46.160328" elapsed="0.896018"/>
+</kw>
+<doc>Student logs in, reports an item, is redirected to Home, sees the item card, and clicks it to view details.</doc>
+<status status="PASS" start="2025-11-18T04:05:27.615351" elapsed="19.440995"/>
+</test>
+<test id="s1-t2" name="Test Case 2: Admin Complete Workflow (Report -&gt; Detail -&gt; Mark Returned -&gt; Owner List)" line="83">
+<kw name="Go To Login Page">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:47.057346" level="INFO">Opening browser 'Chrome' to base url 'http://localhost:3000/login'.</msg>
+<arg>${LOGIN_URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:05:47.057346" elapsed="1.571978"/>
+</kw>
+<kw name="Maximize Browser Window" owner="SeleniumLibrary">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.629324" elapsed="0.068999"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.698323" elapsed="0.019001"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:47.057346" elapsed="1.659978"/>
+</kw>
+<kw name="Login As Admin">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.718324" elapsed="0.007999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:48.726323" level="INFO">Typing text 'admin@g.siit.tu.ac.th' into text field 'name=username'.</msg>
+<arg>${EMAIL_INPUT}</arg>
+<arg>${ADMIN_EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.726323" elapsed="0.152463"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:48.878786" level="INFO">Typing text 'Password123!' into text field 'name=password'.</msg>
+<arg>${PASSWORD_INPUT}</arg>
+<arg>${ADMIN_PASSWORD}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.878786" elapsed="0.070999"/>
+</kw>
+<kw name="Submit Form" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:48.950785" level="INFO">Submitting form 'xpath=//form'.</msg>
+<arg>${LOGIN_FORM}</arg>
+<doc>Submits a form identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:48.949785" elapsed="0.088001"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${ADMIN_DASHBOARD_URL}</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:05:49.037786" elapsed="3.259041"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:48.717324" elapsed="3.579503"/>
+</kw>
+<kw name="Go To Report Found Page">
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:52.297827" level="INFO">Opening url 'http://localhost:3000/admin/report-found'</msg>
+<arg>${REPORT_FOUND_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.297827" elapsed="0.089001"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Report Found Item</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.386828" elapsed="0.013001"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:05:52.296827" elapsed="0.103002"/>
+</kw>
+<kw name="Report Found Item Successfully">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:52.400830" level="INFO">Typing text 'Blue Backpack Found (E2E)' into text field 'xpath=//form[@class="rf-form"]//input[@placeholder="e.g., iPhone 13 Pro"]'.</msg>
+<arg>xpath=//form[@class="rf-form"]//input[@placeholder="e.g., iPhone 13 Pro"]</arg>
+<arg>${FOUND_ITEM_NAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.399829" elapsed="0.118999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:52.518828" level="INFO">Typing text 'Description test.' into text field 'xpath=//form[@class="rf-form"]//textarea[@class="rf-textarea"]'.</msg>
+<arg>xpath=//form[@class="rf-form"]//textarea[@class="rf-textarea"]</arg>
+<arg>Description test.</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.518828" elapsed="0.082999"/>
+</kw>
+<kw name="Select From List By Value" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:52.602829" level="INFO">Selecting options from selection list 'xpath=//form[@class="rf-form"]//select[@class="rf-input rf-select"]' by value Accessories.</msg>
+<arg>xpath=//form[@class="rf-form"]//select[@class="rf-input rf-select"]</arg>
+<arg>Accessories</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.601827" elapsed="0.049000"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:52.651828" level="INFO">Typing text '2025-11-18T14:30' into text field 'xpath=//input[@type="datetime-local"]'.</msg>
+<arg>xpath=//input[@type="datetime-local"]</arg>
+<arg>${DATETIME_LOST}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.651828" elapsed="0.042001"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2025-11-18T04:05:53.194698" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5s</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.693829" elapsed="0.500869"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:53.194698" level="INFO">Typing text 'SIIT Main Building' into text field 'xpath=//input[@placeholder="e.g., Main Cafeteria..."]'.</msg>
+<arg>xpath=//input[@placeholder="e.g., Main Cafeteria..."]</arg>
+<arg>SIIT Main Building</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:53.194698" elapsed="0.091387"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${FOUND_SUBMIT_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:05:53.286085" elapsed="0.008999"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:53.295084" level="INFO">Clicking element 'xpath=//button[@type="submit" and text()="Submit Report"]'.</msg>
+<arg>${FOUND_SUBMIT_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:05:53.295084" elapsed="0.032001"/>
+</kw>
+<kw name="Alert Should Be Present" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:53.328086" level="INFO">HANDLE::&lt;class 'NoneType'&gt;::None</msg>
+<arg>SUCCESS! Item reported</arg>
+<doc>Verifies that an alert is present and by default, accepts it.</doc>
+<status status="PASS" start="2025-11-18T04:05:53.328086" elapsed="1.005170"/>
+</kw>
+<doc>Fills form and ensures success alert appears.</doc>
+<status status="PASS" start="2025-11-18T04:05:52.399829" elapsed="1.933427"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:05:54.333256" level="INFO">Opening url 'http://localhost:3000/admin/items'</msg>
+<arg>${ADMIN_ITEMS_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:05:54.333256" elapsed="0.014000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>All Item List</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:54.347256" elapsed="0.063004"/>
+</kw>
+<kw name="Click Item Card On List Page">
+<kw name="Wait Until Page Does Not Contain" owner="SeleniumLibrary">
+<arg>Loading items...</arg>
+<arg>timeout=15s</arg>
+<doc>Waits until ``text`` disappears from the current page.</doc>
+<status status="PASS" start="2025-11-18T04:05:54.411259" elapsed="10.688069"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-11-18T04:06:05.099328" level="INFO">${CARD_TITLE_LOCATOR} = xpath=//div[contains(@class, "card-title") and contains(., "Blue Backpack Found (E2E)")]</msg>
+<var>${CARD_TITLE_LOCATOR}</var>
+<arg>xpath=//div[contains(@class, "card-title") and contains(., "${ITEM_NAME_TO_CLICK}")]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.099328" elapsed="0.001001"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.100329" elapsed="0.010298"/>
+</kw>
+<kw name="Scroll Element Into View" owner="SeleniumLibrary">
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<doc>Scrolls the element identified by ``locator`` into view.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.110627" elapsed="0.261699"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.372326" level="INFO">Clicking element 'xpath=//div[contains(@class, "card-title") and contains(., "Blue Backpack Found (E2E)")]'.</msg>
+<arg>${CARD_TITLE_LOCATOR}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.372326" elapsed="0.038998"/>
+</kw>
+<arg>${FOUND_ITEM_NAME}</arg>
+<doc>Waits for loading to finish, scrolls to the card title, and clicks it.</doc>
+<status status="PASS" start="2025-11-18T04:05:54.411259" elapsed="11.000065"/>
+</kw>
+<kw name="Verify Item Details Page">
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${EXPECTED_NAME} Details</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.412324" elapsed="0.011000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${EXPECTED_LOCATION}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.423324" elapsed="0.010001"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Date Lost/Found:</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.433325" elapsed="0.009999"/>
+</kw>
+<arg>${FOUND_ITEM_NAME}</arg>
+<arg>SIIT Main Building</arg>
+<doc>Verifies we are on the detail page and see correct info.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.411324" elapsed="0.032000"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.443324" level="INFO">Clicking button 'xpath=//button[contains(text(), "Mark Claimed/Returned")]'.</msg>
+<arg>${MARK_RETURNED_BUTTON}</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.443324" elapsed="0.042000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Finalize Claim / Return</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.485324" elapsed="0.020001"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.505325" level="INFO">Typing text 'Test Claimant' into text field 'xpath=//input[@placeholder="Owner's name"]'.</msg>
+<arg>${ID_NAME_INPUT}</arg>
+<arg>${CLAIMANT_NAME}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.505325" elapsed="0.081001"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.587324" level="INFO">Clicking element 'xpath=//input[@type="radio" and @value="student"]'.</msg>
+<arg>${ID_RADIO_STUDENT}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.587324" elapsed="0.035171"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.622495" level="INFO">Typing text '9999999999' into text field 'xpath=//input[contains(@class, "student-id-input")]'.</msg>
+<arg>${ID_STUDENT_ID_INPUT}</arg>
+<arg>${STUDENT_ID_VAL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.622495" elapsed="0.065999"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.689494" level="INFO">Typing text '0812345678' into text field 'xpath=//input[@placeholder="Phone number"]'.</msg>
+<arg>${ID_TEL_INPUT}</arg>
+<arg>${CLAIMANT_PHONE}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.688494" elapsed="0.063998"/>
+</kw>
+<kw name="Choose File" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.753493" level="INFO">Sending C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\test_proof.png to browser.</msg>
+<arg>${ID_FILE_INPUT}</arg>
+<arg>${IMAGE_PATH}</arg>
+<doc>Inputs the ``file_path`` into the file input field ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.753493" elapsed="0.020000"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.774493" level="INFO">Clicking button 'xpath=//button[text()="Submit"]'.</msg>
+<arg>${ID_SUBMIT_BUTTON}</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.774493" elapsed="0.041000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Confirm marking item</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.816493" elapsed="0.011000"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.828494" level="INFO">Clicking button 'xpath=//button[text()="Yes"]'.</msg>
+<arg>${CONFIRM_YES_BUTTON}</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.827493" elapsed="0.043000"/>
+</kw>
+<kw name="Run Keyword And Ignore Error" owner="BuiltIn">
+<kw name="Handle Alert" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:05.870493" level="INFO">HANDLE::&lt;class 'NoneType'&gt;::None</msg>
+<doc>Handles the current alert and returns its message.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.870493" elapsed="5.019961"/>
+</kw>
+<arg>Handle Alert</arg>
+<doc>Runs the given keyword with the given arguments and ignores possible error.</doc>
+<status status="PASS" start="2025-11-18T04:06:05.870493" elapsed="5.019961"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${ADMIN_ITEMS_URL}</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:06:10.890454" elapsed="0.009000"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:10.900454" level="INFO">Opening url 'http://localhost:3000/admin/ownerlist'</msg>
+<arg>${ADMIN_OWNERLIST_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-11-18T04:06:10.900454" elapsed="0.070000"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Owner Verification Lists</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:10.970454" elapsed="0.011000"/>
+</kw>
+<kw name="Verify And Open Owner Review">
+<kw name="Wait Until Page Does Not Contain" owner="SeleniumLibrary">
+<arg>Loading requests...</arg>
+<arg>timeout=10s</arg>
+<doc>Waits until ``text`` disappears from the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:10.981454" elapsed="11.918865"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-11-18T04:06:22.901319" level="INFO">${NAME_LOCATOR} = xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "Test Claimant")]</msg>
+<var>${NAME_LOCATOR}</var>
+<arg>xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "${CLAIMANT_NAME}")]</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-11-18T04:06:22.900319" elapsed="0.001000"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${NAME_LOCATOR}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:06:22.901319" elapsed="0.009001"/>
+</kw>
+<kw name="Scroll Element Into View" owner="SeleniumLibrary">
+<arg>${NAME_LOCATOR}</arg>
+<doc>Scrolls the element identified by ``locator`` into view.</doc>
+<status status="PASS" start="2025-11-18T04:06:22.910320" elapsed="0.263337"/>
+</kw>
+<kw name="Set Variable" owner="BuiltIn">
+<msg time="2025-11-18T04:06:23.173657" level="INFO">${REVIEW_BTN} = xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "Test Claimant")]/following-sibling::div[@class="owner-action-row"]/button</msg>
+<var>${REVIEW_BTN}</var>
+<arg>xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "${CLAIMANT_NAME}")]/following-sibling::div[@class="owner-action-row"]/button</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.173657" elapsed="0.000000"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:23.173657" level="INFO">Clicking element 'xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "Test Claimant")]/following-sibling::div[@class="owner-action-row"]/button'.</msg>
+<arg>${REVIEW_BTN}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.173657" elapsed="0.043002"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>Review Verification Request</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.216659" elapsed="0.015999"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${CLAIMANT_NAME}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.232658" elapsed="0.010999"/>
+</kw>
+<kw name="Wait Until Page Contains" owner="SeleniumLibrary">
+<arg>${STUDENT_ID_VAL}</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.243657" elapsed="0.010999"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:23.255657" level="INFO">Clicking button 'xpath=//button[contains(text(), "Close Review")]'.</msg>
+<arg>xpath=//button[contains(text(), "Close Review")]</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.255657" elapsed="0.045000"/>
+</kw>
+<arg>${CLAIMANT_NAME}</arg>
+<doc>Finds the request card by claimant name and clicks Open Review.</doc>
+<status status="PASS" start="2025-11-18T04:06:10.981454" elapsed="12.319203"/>
+</kw>
+<kw name="Logout User">
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${MENU_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.301657" elapsed="0.008000"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:23.310658" level="INFO">Clicking element 'xpath=//button[@aria-label="Menu"]'.</msg>
+<arg>${MENU_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.310658" elapsed="0.034626"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${LOGOUT_BUTTON}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.345284" elapsed="0.010000"/>
+</kw>
+<kw name="Click Element" owner="SeleniumLibrary">
+<msg time="2025-11-18T04:06:23.355284" level="INFO">Clicking element 'xpath=//button[contains(@class, "logout-button")]'.</msg>
+<arg>${LOGOUT_BUTTON}</arg>
+<doc>Click the element identified by ``locator``.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.355284" elapsed="0.036000"/>
+</kw>
+<kw name="Wait Until Location Is" owner="SeleniumLibrary">
+<arg>${LOGIN_URL}</arg>
+<doc>Waits until the current URL is ``expected``.</doc>
+<status status="PASS" start="2025-11-18T04:06:23.391284" elapsed="0.812602"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:06:23.301657" elapsed="0.902229"/>
+</kw>
+<doc>Admin reports found item, views it, marks it as returned (identification), and verifies the record in Owner List.</doc>
+<status status="PASS" start="2025-11-18T04:05:47.056346" elapsed="37.147540"/>
+</test>
+<kw name="Cleanup Environment" type="TEARDOWN">
+<kw name="Close All Browsers" owner="SeleniumLibrary">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" start="2025-11-18T04:06:24.204888" elapsed="4.248300"/>
+</kw>
+<kw name="Remove File" owner="OperatingSystem">
+<msg time="2025-11-18T04:06:28.453188" level="INFO" html="true">Removed file '&lt;a href="file://C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\test_proof.png"&gt;C:\Users\User\Desktop\cloud\Campus-Lost-and-Found-System\client\tests\test_proof.png&lt;/a&gt;'.</msg>
+<arg>${IMAGE_PATH}</arg>
+<doc>Removes a file with the given path.</doc>
+<status status="PASS" start="2025-11-18T04:06:28.453188" elapsed="0.000000"/>
+</kw>
+<status status="PASS" start="2025-11-18T04:06:24.204888" elapsed="4.249303"/>
+</kw>
+<doc>End-to-End Workflow: Student Report -&gt; Detail, then Admin Report -&gt; Detail -&gt; Identification -&gt; Owner List.</doc>
+<status status="PASS" start="2025-11-18T04:05:27.438007" elapsed="61.016184"/>
+</suite>
+<statistics>
+<total>
+<stat pass="2" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="LostAndFoundWebTests" id="s1" pass="2" fail="0" skip="0">LostAndFoundWebTests</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

@@ -50,7 +50,7 @@ function ReportFound() {
 
       if (response.ok) {
         const uniqueId = result.item ? result.item.PK : 'Unknown ID';
-        alert(`SUCCESS! Item reported with ID: ${uniqueId}`);   
+        alert(`SUCCESS! Item reported`);   
         // Clear form after successful submission
         setItemName(""); setDescription(""); setCategory(""); setDateFound(""); setLocation(""); setOfficeNotes("");
       } else {

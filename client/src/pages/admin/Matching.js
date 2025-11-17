@@ -90,7 +90,16 @@ function Matching() {
                     key={match.PK + match.SK}
                     className={`match-item p-4 border rounded-lg shadow-md bg-white border-blue-200`}
                 >
-            
+
+                    <div className="text-sm text-gray-700 space-y-1">
+                        <p>
+                            <span className="font-bold">Lost Item:</span> {item1Name}
+                        </p>
+                        <p>
+                            <span className="font-bold">Found Item:</span> {item2Name}
+                        </p>
+                    </div>
+                    
                   
                   <div className="match-details space-y-2">
                     {/* 1. LOST ITEM REPORTER USER */}
