@@ -13,6 +13,7 @@ import AdminItems from "./pages/admin/AdminItems";
 import AdminDetail from "./pages/admin/AdminDetail";
 import Identification from "./pages/admin/identification";
 import OwnerList from "./pages/admin/OwnerList";
+import MatchingList from "./pages/admin/Matching"; 
 
 
 
@@ -33,6 +34,8 @@ function App() {
         <Route path="/admin/itemdetail/:id" element={<AdminDetail />} />
         <Route path="/admin/identification" element={<Identification />} />
         <Route path="/admin/ownerlist" element={<OwnerList />} />
+        <Route path="/admin/matching" element={<MatchingList />} />
+
       </Routes>
     </Router>
   );

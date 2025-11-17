@@ -67,6 +67,16 @@ const Sidebar = ({ isOpen, onClose, onLogout }) => {
             Owner List
           </Link>
 
+        
+
+          <Link
+            to="/admin/matching"
+            className={isActive("/admin/matching")}
+            onClick={onClose}
+          >
+            Matching Lists
+          </Link>
+
           {/* ---- Logout pinned at bottom ---- */}
           <div className="sidebar-bottom">
             <button

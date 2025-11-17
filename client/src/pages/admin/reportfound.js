@@ -122,12 +122,12 @@ function ReportFound() {
                   required
                 >
                   <option value="">Select category</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="accessories">Accessories</option>
-                  <option value="books">Books</option>
-                  <option value="keys">Keys</option>
-                  <option value="other">Other</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Accessories">Accessories</option>
+                  <option value="Books">Books</option>
+                  <option value="Keys">Keys</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
             </div>
