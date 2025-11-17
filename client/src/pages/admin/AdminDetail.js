@@ -195,36 +195,42 @@ function AdminDetail() {
 
       {/* --- Admin Actions --- */}
       <div className="id-actions">
-        {/* 🔴 RED DELETE BUTTON */}
-        <button
-          type="button"
-          className="btn-secondary"
-          style={{
-            backgroundColor: "#DC2626",
-            borderColor: "#DC2626",
-            color: "#ffffff",
-          }}
-          onClick={handleDelete}
-        >
-          Delete
-        </button>
+  {/* DELETE BUTTON */}
+  <button
+    type="button"
+    className="btn-secondary"
+    style={{
+      backgroundColor: "#DC2626",
+      borderColor: "#DC2626",
+      color: "#ffffff",
+    }}
+    onClick={handleDelete}
+  >
+    Delete
+  </button>
 
-        <button
-          type="button"
-          className="btn-secondary"
-          onClick={() => navigate(-1)}
-        >
-          Back
-        </button>
+  {/* BACK BUTTON */}
+  <button
+    type="button"
+    className="btn-secondary"
+    onClick={() => navigate(-1)}
+  >
+    Back
+  </button>
 
-        <button
-          type="button"
-          className="btn-primary"
-          onClick={() => navigate(`/admin/identification`, { state: { item } })}
-        >
-          Mark Claimed/Returned
-        </button>
-      </div>
+  {/* ✔ ONLY SHOW THIS BUTTON IF STATUS IS NOT RETURNED */}
+  {item.status !== "RETURNED" && (
+    <button
+      type="button"
+      className="btn-primary"
+      onClick={() =>
+        navigate(`/admin/identification`, { state: { item } })
+      }
+    >
+      Mark Claimed/Returned
+    </button>
+  )}
+</div>
     </AdminLayout>
   );
 }
