@@ -12,8 +12,7 @@ import ReportFound from "./pages/admin/reportfound";
 import AdminItems from "./pages/admin/AdminItems";
 import AdminDetail from "./pages/admin/AdminDetail";
 import Identification from "./pages/admin/identification";
-
-
+import OwnerList from "./pages/admin/OwnerList";
 
 
 
@@ -33,6 +32,7 @@ function App() {
         <Route path="/admin/items" element={<AdminItems />} />
         <Route path="/admin/itemdetail/:id" element={<AdminDetail />} />
         <Route path="/admin/identification" element={<Identification />} />
+        <Route path="/admin/ownerlist" element={<OwnerList />} />
       </Routes>
     </Router>
   );
