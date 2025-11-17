@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClientLayout from "./AdminLayout1";
 
-// PLACEHOLDER: Define your API URL for updating item status 
-const UPDATE_ITEM_STATUS_API_URL = "YOUR_NEW_API_GATEWAY_URL_FOR_STATUS_UPDATE"; 
+// ✅ Your deployed API base
+const API_BASE = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/Prod";
+const GET_UPLOAD_URL_API = `${API_BASE}/getVerificationUploadUrl`;
+const SAVE_DATA_API = `${API_BASE}/saveVerificationData`;
 
 function Identification() {
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // 🚨 CRITICAL FIX: Retrieve the item object passed from AdminDetail 🚨
-  const itemToUpdate = location.state?.item; 
+
+  // item passed from AdminDetail
+  const itemToUpdate = location.state?.item;
 
   // --- Form States ---
   const [name, setName] = useState("");
@@ -18,28 +20,98 @@ function Identification() {
   const [studentId, setStudentId] = useState("");
   const [tel, setTel] = useState("");
   const [files, setFiles] = useState([]);
-  
-  // 🚨 FIXED: Determine the intended status action silently 🚨
-  const statusAction = itemToUpdate?.status === 'FOUND' ? 'CLAIMED' : 'RETURNED'; 
-  
+
+  // For wording only (backend always sets RETURNED right now)
+  const statusAction = itemToUpdate?.status === "FOUND" ? "CLAIMED" : "RETURNED";
+
   // --- UI States ---
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
-  // Check if item data is missing
+  // If item not passed correctly
   if (!itemToUpdate || !itemToUpdate.PK) {
     return (
       <ClientLayout>
         <div className="id-container">
-          <p className="error-message">Error: Item context is missing. Cannot process claim.</p>
-          <button className="btn-secondary" onClick={() => navigate('/admin/items')}>
+          <p className="error-message">
+            Error: Item context is missing. Cannot process claim.
+          </p>
+          <button
+            className="btn-secondary"
+            onClick={() => navigate("/admin/items")}
+          >
             Go to Item List
           </button>
         </div>
       </ClientLayout>
     );
   }
+
+  // ---------- Helpers for the 3-step flow ----------
+
+  // 1) Ask backend for a presigned URL
+  const getUploadUrlForFile = async (file) => {
+    const fileName = file.name;
+    const mimeType = file.type || "application/octet-stream";
+
+    const res = await fetch(GET_UPLOAD_URL_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fileName, mimeType }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to get upload URL");
+    }
+
+    return res.json(); // { uploadUrl, key }
+  };
+
+  // 2) Upload file directly to S3
+  const uploadFileToS3 = async (file, uploadUrl) => {
+    const mimeType = file.type || "application/octet-stream";
+
+    const res = await fetch(uploadUrl, {
+      method: "PUT",
+      headers: { "Content-Type": mimeType },
+      body: file,
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to upload file to S3");
+    }
+  };
+
+  // 3) Save verification data + mark item as RETURNED in DynamoDB via Lambda
+  const saveVerificationData = async (photoKeys) => {
+    const payload = {
+      itemPK: itemToUpdate.PK, // PK from CampusLostAndFound_Items
+      itemSK: itemToUpdate.SK, // SK from CampusLostAndFound_Items
+      name,
+      role,
+      studentId: role === "student" ? studentId : "",
+      tel,
+      photoKeys, // array of S3 keys
+    };
+
+    const res = await fetch(SAVE_DATA_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Failed to save verification data");
+    }
+
+    return res.json();
+  };
+
+  // ---------- Event Handlers ----------
 
   const handleFileChange = (e) => {
     const list = Array.from(e.target.files || []);
@@ -50,13 +122,14 @@ function Identification() {
     e.preventDefault();
 
     const payload = {
-      PK: itemToUpdate.PK, // Include the item PK
+      PK: itemToUpdate.PK,
+      SK: itemToUpdate.SK,
       name,
       role,
       studentId: role === "student" ? studentId : "",
       tel,
       filesCount: files.length,
-      newStatus: statusAction, // Status to update (CLAIMED or RETURNED)
+      newStatus: statusAction,
     };
 
     console.log("Identification payload (before confirm):", payload);
@@ -67,65 +140,59 @@ function Identification() {
     navigate(-1);
   };
 
-
   const handleConfirmYes = async () => {
     setShowConfirm(false);
     setLoading(true);
-
-    const submissionPayload = {
-      PK: itemToUpdate.PK, 
-      claimantName: name,
-      claimantRole: role,
-      claimantId: role === "student" ? studentId : null,
-      claimantTel: tel,
-      newStatus: statusAction,
-      // You would include files/upload logic here
-    };
+    setSubmitError(null);
 
     try {
-        // 🚨 Placeholder for actual API call 🚨
-        const res = await fetch(UPDATE_ITEM_STATUS_API_URL, {
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(submissionPayload),
-        });
+      const uploadedKeys = [];
 
-        const data = await res.json();
+      // Step 1 & 2: for each selected file, get presigned URL and upload to S3
+      for (const file of files) {
+        const { uploadUrl, key } = await getUploadUrlForFile(file);
+        await uploadFileToS3(file, uploadUrl);
+        uploadedKeys.push(key);
+      }
 
-        if (!res.ok) {
-            throw new Error(data.message || "Failed to update item status.");
-        }
+      // Step 3: save verification data and mark item as RETURNED/CLAIMED
+      await saveVerificationData(uploadedKeys);
 
-        console.log("Identification confirmed & submitted successfully.");
-        alert(`Item ${itemToUpdate.itemName} successfully marked as ${statusAction}.`);
-        navigate("/admin/items");
-
+      console.log("Identification confirmed & submitted successfully.");
+      alert(
+        `Item ${itemToUpdate.itemName} successfully marked as ${statusAction}.`
+      );
+      navigate("/admin/items");
     } catch (err) {
-        console.error("Submission error:", err);
-        setSubmitError(err.message || "An unknown error occurred during submission.");
-        setLoading(false);
+      console.error("Submission error:", err);
+      setSubmitError(
+        err.message || "An unknown error occurred during submission."
+      );
+      setLoading(false);
     }
   };
-
 
   const handleConfirmNo = () => {
     setShowConfirm(false);
   };
+
+  // ---------- JSX ----------
 
   return (
     <ClientLayout>
       <div className="id-container">
         <h1 className="id-page-title">Finalize Claim / Return</h1>
 
-        {/* Item Context Section (NEW) */}
+        {/* Item Context Section */}
         <section className="id-section">
           <h2 className="id-section-title">Item Details</h2>
           <p className="id-context-info">
-            Item: <strong>{itemToUpdate.itemName}</strong> ({itemToUpdate.PK.substring(5, 13)}...)
+            Item: <strong>{itemToUpdate.itemName}</strong> (
+            {itemToUpdate.PK.substring(5, 13)}...)
             <br />
-            Reported as: <strong>{itemToUpdate.category}</strong>. Current Status: <strong>{itemToUpdate.status}</strong>
+            Reported as: <strong>{itemToUpdate.category}</strong>. Current
+            Status: <strong>{itemToUpdate.status}</strong>
             <br />
-           
           </p>
         </section>
 
@@ -203,11 +270,7 @@ function Identification() {
                 <label className="upload-btn">
                   <span className="upload-icon">⬆</span>
                   <span>Choose file</span>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={handleFileChange}
-                  />
+                  <input type="file" multiple onChange={handleFileChange} />
                 </label>
                 {files.length > 0 && (
                   <div className="upload-info">
@@ -217,8 +280,9 @@ function Identification() {
               </div>
             </div>
 
-            {submitError && <p className="error-message">{submitError}</p>}
-
+            {submitError && (
+              <p className="error-message">{submitError}</p>
+            )}
 
             {/* Buttons */}
             <div className="id-actions">
@@ -251,7 +315,10 @@ function Identification() {
               ×
             </button>
             <div className="confirm-body">
-              <p className="confirm-text">Confirm marking item **{itemToUpdate.itemName}** as **{statusAction}**?</p>
+              <p className="confirm-text">
+                Confirm marking item <strong>{itemToUpdate.itemName}</strong> as{" "}
+                <strong>{statusAction}</strong>?
+              </p>
               <div className="confirm-actions">
                 <button
                   type="button"
