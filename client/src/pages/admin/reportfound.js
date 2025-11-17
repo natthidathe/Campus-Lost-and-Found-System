@@ -74,6 +74,8 @@ function ReportFound() {
     <ClientLayout>
       <div className="rf-container">
         {/* Header content... */}
+        <h1 className="page-title">Report Found Item</h1>
+        <p className="page-subtitle">Tell us what you found.</p>
 
         {/* Form */}
         <form className="rf-form" onSubmit={handleSubmit}>
