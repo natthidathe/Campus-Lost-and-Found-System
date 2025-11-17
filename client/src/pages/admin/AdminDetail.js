@@ -133,7 +133,7 @@ function AdminDetail() {
           // Navigate to the identification page and pass the current item's data
           onClick={() => navigate(`/admin/identification`, { state: { item } })}
         >
-          Mark Claimed/Returned
+          Mark Returned
         </button>
       </div>
     </AdminLayout>

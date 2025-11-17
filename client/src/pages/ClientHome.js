@@ -56,7 +56,7 @@ function Home() {
     if (itemStatus === 'deleted' || itemStatus === 'archived') {
         return false;
     }
-    
+
     const matchesSearch =
       (item.itemName && item.itemName.toLowerCase().includes(keyword)) ||
       (item.category && item.category.toLowerCase().includes(keyword)) ||
@@ -127,7 +127,6 @@ function Home() {
           <option value="all">All Status</option>
           <option value="lost">LOST</option> 
           <option value="found">FOUND</option>
-          <option value="claimed">Claimed</option>
           <option value="returned">Returned</option>
         </select>
       </div>
