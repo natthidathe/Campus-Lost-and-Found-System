@@ -49,28 +49,39 @@ function RedirectToHome() {
         // 1. Get the current user's session token
         const { tokens } = await fetchAuthSession();
         
+        if (!tokens) {
+          // No session – force login
+          navigate('/login');
+          return;
+        }
+
         // 2. Extract the groups/roles from the ID token (Cognito stores roles in 'cognito:groups')
         const groups = tokens.idToken.payload['cognito:groups'] || []; 
         
-        // 3. Determine the destination based on the group
+        // 3. Decide the role & save it for route protection
         if (groups.includes('admin') || groups.includes('staff')) {
-          // If the user belongs to the Admin or Staff group, go to the Admin Dashboard
+          // ✅ Admin
+          localStorage.setItem('role', 'admin');
           navigate('/admin/dashboard');
         } else {
-          // Default: If Student or unassigned, go to the Student Home page
+          // ✅ Student / others
+          localStorage.setItem('role', 'student');
           navigate('/home');
         }
       } catch (error) {
         console.error("Error checking user role:", error);
-        // Fallback safety redirect
-        navigate('/home');
+        // Clear stored role just in case and send to login
+        localStorage.removeItem('role');
+        navigate('/login');
       }
     }
+
     checkUserRole();
   }, [navigate]);
   
   return <div>Authenticating and checking role...</div>;
 }
+
 
 // This is your main Login component
 export default function Login() {

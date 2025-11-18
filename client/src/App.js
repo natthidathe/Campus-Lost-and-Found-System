@@ -1,5 +1,5 @@
 import React from "react";
-import './css/App.css';
+import "./css/App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -13,29 +13,78 @@ import AdminItems from "./pages/admin/AdminItems";
 import AdminDetail from "./pages/admin/AdminDetail";
 import Identification from "./pages/admin/identification";
 import OwnerList from "./pages/admin/OwnerList";
-import MatchingList from "./pages/admin/Matching"; 
-
-
+import MatchingList from "./pages/admin/Matching";
+import AdminRoute from "./components/AdminRoute";
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public / student routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/report-lost" element={<ReportLost />} />
         <Route path="/item/:id" element={<ItemDetail />} />
         <Route path="/notifications" element={<Notifications />} />
-        {/* Admin routes */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/report-found" element={<ReportFound />} />
-        <Route path="/admin/items" element={<AdminItems />} />
-        <Route path="/admin/itemdetail/:id" element={<AdminDetail />} />
-        <Route path="/admin/identification" element={<Identification />} />
-        <Route path="/admin/ownerlist" element={<OwnerList />} />
-        <Route path="/admin/matching" element={<MatchingList />} />
 
+        {/* 🔐 Admin routes (protected) */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/report-found"
+          element={
+            <AdminRoute>
+              <ReportFound />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/items"
+          element={
+            <AdminRoute>
+              <AdminItems />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/itemdetail/:id"
+          element={
+            <AdminRoute>
+              <AdminDetail />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/identification"
+          element={
+            <AdminRoute>
+              <Identification />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/ownerlist"
+          element={
+            <AdminRoute>
+              <OwnerList />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/matching"
+          element={
+            <AdminRoute>
+              <MatchingList />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </Router>
   );
