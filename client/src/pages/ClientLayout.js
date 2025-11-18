@@ -117,20 +117,6 @@ function ClientLayout({ children }) {
           <span />
           <span />
         </button>
-
-        <div className="topbar-right">
-          <button
-            className="icon-button home-outline"
-            aria-label="Home"
-            onClick={() => navigate("/home")}
-          />
-          <button
-            className="icon-button"
-            onClick={handleBellClick}
-          >
-            <FiBell size={22} />
-          </button>
-        </div>
       </header>
 
       {/* Main content area */}
