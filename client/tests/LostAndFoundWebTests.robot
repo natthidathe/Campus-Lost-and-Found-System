@@ -1,9 +1,10 @@
 *** Settings ***
-Documentation     End-to-End Workflow: Student Report -> Detail, then Admin Report -> Detail -> Identification -> Owner List.
+Documentation     End-to-End UAT Workflow: Student Report, Admin Return, and Admin Delete.
 Library           SeleniumLibrary
 Library           OperatingSystem
-Suite Setup       Setup Environment
-Suite Teardown    Cleanup Environment
+Library           String
+Suite Setup       Setup Test Environment
+Suite Teardown    Cleanup Test Environment
 
 *** Variables ***
 ${BROWSER}            Chrome
@@ -15,7 +16,7 @@ ${ADMIN_DASHBOARD_URL}  http://localhost:3000/admin/dashboard
 ${ADMIN_ITEMS_URL}      http://localhost:3000/admin/items
 ${ADMIN_OWNERLIST_URL}  http://localhost:3000/admin/ownerlist
 
-# --- File Upload Path (Creates a dummy image in the current directory) ---
+# --- File Upload Path ---
 ${IMAGE_FILENAME}     test_proof.png
 ${IMAGE_PATH}         ${CURDIR}${/}${IMAGE_FILENAME}
 
@@ -25,9 +26,7 @@ ${STUDENT_PASSWORD}   Burger5$
 ${ADMIN_EMAIL}        admin@g.siit.tu.ac.th
 ${ADMIN_PASSWORD}     Password123!
 
-# --- Unique Item Data ---
-${LOST_ITEM_NAME}     Blue Backpack Lost (E2E)
-${FOUND_ITEM_NAME}    Blue Backpack Found (E2E)
+# --- Static Data ---
 ${STUDENT_ID_VAL}     9999999999
 ${DATETIME_LOST}      2025-11-18T14:30
 ${CLAIMANT_NAME}      Test Claimant
@@ -54,103 +53,124 @@ ${ID_FILE_INPUT}            xpath=//input[@type="file"]
 ${ID_SUBMIT_BUTTON}         xpath=//button[text()="Submit"]
 ${CONFIRM_YES_BUTTON}       xpath=//button[text()="Yes"]
 
+# Delete Button Locator
+${DELETE_BUTTON}            xpath=//button[text()="Delete"]
+
 *** Test Cases ***
 
-Test Case 1: Student Complete Workflow (Report -> Home -> Detail)
-    [Documentation]    Student logs in, reports an item, is redirected to Home, sees the item card, and clicks it to view details.
+Test Case 1: Student Reporting Process (Report -> View List -> View Detail)
+    [Documentation]    Verifies the Student's ability to report a lost item and view it.
+    [Setup]    Generate Unique Item Names
     
     # 1. Login
-    Go To Login Page
     Login As Student
     
-    # 2. Report Lost Item
-    Go To Report Lost Page
-    Report Lost Item Successfully
+    # 2. Test Reporting Process
+    Verify Student Can Report Lost Item    ${DYNAMIC_LOST_ITEM}
     
-    # 3. Verify Redirect to Home and Card Visibility
+    # 3. Test List View Visibility
     Wait Until Location Is    ${BASE_URL}/home
     Wait Until Page Contains    All Item List
     
-    # 4. Click the specific item card to see details
-    Click Item Card On List Page    ${LOST_ITEM_NAME}
+    # 4. Test Item Detail Navigation
+    Verify Item Is Listed And Click    ${DYNAMIC_LOST_ITEM}
     
-    # 5. Verify Detail Page Content
-    Verify Item Details Page    ${LOST_ITEM_NAME}    SIIT Main Building
+    # 5. Test Detail Content
+    Verify Item Details Page Content    ${DYNAMIC_LOST_ITEM}    SIIT Main Building
     
     # 6. Logout
     Logout User
 
-Test Case 2: Admin Complete Workflow (Report -> Detail -> Mark Returned -> Owner List)
-    [Documentation]    Admin reports found item, views it, marks it as returned (identification), and verifies the record in Owner List.
+Test Case 2: Admin Resolution Process (Report -> View Detail -> Process Return -> Verify Owner List)
+    [Documentation]    Verifies the Admin's ability to report found items and process a return.
+    [Setup]    Generate Unique Item Names
     
     # 1. Login
-    Go To Login Page
     Login As Admin
     
-    # 2. Report Found Item
-    Go To Report Found Page
-    Report Found Item Successfully
+    # 2. Test Reporting Process
+    Verify Admin Can Report Found Item    ${DYNAMIC_FOUND_ITEM}
     
-    # 3. Go to Admin Item List to verify card
+    # 3. Test List View Navigation
     Go To    ${ADMIN_ITEMS_URL}
     Wait Until Page Contains    All Item List
     
-    # 4. Click the specific item card
-    Click Item Card On List Page    ${FOUND_ITEM_NAME}
+    # 4. Test Item Detail Navigation
+    Verify Item Is Listed And Click    ${DYNAMIC_FOUND_ITEM}
     
-    # 5. Verify Detail Page
-    Verify Item Details Page    ${FOUND_ITEM_NAME}    SIIT Main Building
+    # 5. Test Detail Content
+    Verify Item Details Page Content    ${DYNAMIC_FOUND_ITEM}    SIIT Main Building
     
-    # 6. Mark as Returned / Identification Flow
-    Click Button    ${MARK_RETURNED_BUTTON}
-    Wait Until Page Contains    Finalize Claim / Return
+    # 6. Test Return/Identification Process
+    Execute Admin Return Process    ${CLAIMANT_NAME}
     
-    # Fill Identification Form
-    Input Text    ${ID_NAME_INPUT}        ${CLAIMANT_NAME}
-    Click Element    ${ID_RADIO_STUDENT}
-    Input Text    ${ID_STUDENT_ID_INPUT}  ${STUDENT_ID_VAL}
-    Input Text    ${ID_TEL_INPUT}         ${CLAIMANT_PHONE}
+    # 7. Test Owner List Verification
+    Verify Owner Verification List    ${CLAIMANT_NAME}
     
-    # 🚨 UPLOAD IMAGE STEP: Choose the dummy file created in Setup 🚨
-    Choose File   ${ID_FILE_INPUT}        ${IMAGE_PATH}
+    # 8. Logout
+    Logout User
+
+Test Case 3: Admin Delete Item Process (Report -> Delete -> Verify Removal)
+    [Documentation]    Verifies the Admin can delete an item and that it disappears from the list.
+    [Setup]    Generate Unique Item Names
     
-    # Submit and Confirm
-    Click Button    ${ID_SUBMIT_BUTTON}
-    Wait Until Page Contains    Confirm marking item
-    Click Button    ${CONFIRM_YES_BUTTON}
+    # 1. Login
+    Login As Admin
     
-    # Handle Alert if present (Success message)
-    Run Keyword And Ignore Error    Handle Alert
+    # 2. Report a specific item to be deleted
+    Verify Admin Can Report Found Item    ${DYNAMIC_DELETE_ITEM}
     
-    # 7. Verify Redirect to Item List (code behavior)
-    Wait Until Location Is    ${ADMIN_ITEMS_URL}
+    # 3. Go to List and Verify it exists
+    Go To    ${ADMIN_ITEMS_URL}
+    Verify Item Is Listed And Click    ${DYNAMIC_DELETE_ITEM}
     
-    # 8. Go to Owner List to verify the record
-    Go To    ${ADMIN_OWNERLIST_URL}
-    Wait Until Page Contains    Owner Verification Lists
+    # 4. Execute Delete Process (Handle Confirmations)
+    Execute Admin Delete Process
     
-    # 9. Verify the Request Exists and Open Review
-    Verify And Open Owner Review    ${CLAIMANT_NAME}
+    # 5. Verify Item is Gone
+    Verify Item Is Deleted From List    ${DYNAMIC_DELETE_ITEM}
     
-    # 10. Logout
+    # 6. Logout
     Logout User
 
 *** Keywords ***
 
-Setup Environment
+Setup Test Environment
     Set Selenium Implicit Wait    10s
-    # Create a dummy image file for testing uploads so the test is self-contained
     Create File    ${IMAGE_PATH}    dummy content for image upload test
 
-Cleanup Environment
+Cleanup Test Environment
     Close All Browsers
-    # Remove the dummy file to keep the environment clean
     Remove File    ${IMAGE_PATH}
 
-Go To Login Page
+Generate Unique Item Names
+    [Documentation]    Creates unique item names for every test run to avoid duplicates.
+    ${RANDOM_ID}=    Generate Random String    5    [NUMBERS]
+    Set Suite Variable    ${DYNAMIC_LOST_ITEM}     Blue Backpack Lost (Run ${RANDOM_ID})
+    Set Suite Variable    ${DYNAMIC_FOUND_ITEM}    Blue Backpack Found (Run ${RANDOM_ID})
+    Set Suite Variable    ${DYNAMIC_DELETE_ITEM}   Delete Test Item (Run ${RANDOM_ID})
+
+# --- AUTHENTICATION PROCESSES ---
+
+Login As Student
     Open Browser    ${LOGIN_URL}    ${BROWSER}
     Maximize Browser Window
+    Delete All Cookies
     Wait Until Element Is Visible    ${EMAIL_INPUT}
+    Input Text    ${EMAIL_INPUT}    ${STUDENT_EMAIL}
+    Input Text    ${PASSWORD_INPUT}    ${STUDENT_PASSWORD}
+    Submit Form    ${LOGIN_FORM}
+    Wait Until Location Is    ${BASE_URL}/home
+
+Login As Admin
+    Open Browser    ${LOGIN_URL}    ${BROWSER}
+    Maximize Browser Window
+    Delete All Cookies
+    Wait Until Element Is Visible    ${EMAIL_INPUT}
+    Input Text    ${EMAIL_INPUT}    ${ADMIN_EMAIL}
+    Input Text    ${PASSWORD_INPUT}    ${ADMIN_PASSWORD}
+    Submit Form    ${LOGIN_FORM}
+    Wait Until Location Is    ${ADMIN_DASHBOARD_URL}
 
 Logout User
     Wait Until Element Is Visible    ${MENU_BUTTON}
@@ -159,103 +179,127 @@ Logout User
     Click Element    ${LOGOUT_BUTTON}
     Wait Until Location Is    ${LOGIN_URL}
 
-Login As Student
-    Wait Until Element Is Visible    ${EMAIL_INPUT}
-    Input Text    ${EMAIL_INPUT}    ${STUDENT_EMAIL}
-    Input Text    ${PASSWORD_INPUT}    ${STUDENT_PASSWORD}
-    Submit Form    ${LOGIN_FORM}
-    Wait Until Location Is    ${BASE_URL}/home
+# --- CORE TEST PROCESSES ---
 
-Login As Admin
-    Wait Until Element Is Visible    ${EMAIL_INPUT}
-    Input Text    ${EMAIL_INPUT}    ${ADMIN_EMAIL}
-    Input Text    ${PASSWORD_INPUT}    ${ADMIN_PASSWORD}
-    Submit Form    ${LOGIN_FORM}
-    Wait Until Location Is    ${ADMIN_DASHBOARD_URL}
-
-Go To Report Lost Page
+Verify Student Can Report Lost Item
+    [Arguments]    ${ITEM_NAME}
     Go To    ${REPORT_LOST_URL}
     Wait Until Page Contains    Report Lost Item
-
-Report Lost Item Successfully
-    [Documentation]    Fills form and ensures success alert appears.
+    
     Input Text    xpath=//input[@placeholder="e.g., 6522771045"]    ${STUDENT_ID_VAL}
-    Input Text    xpath=//input[@placeholder="e.g., iPhone 13 Pro"]    ${LOST_ITEM_NAME}
+    Input Text    xpath=//input[@placeholder="e.g., iPhone 13 Pro"]    ${ITEM_NAME}
     Select From List By Value    xpath=(//select[@class="select-input"])[1]    Accessories
     Input Text    xpath=//input[@type="datetime-local"]    ${DATETIME_LOST}
     Sleep    0.5s
     Input Text    xpath=//input[@placeholder="e.g., SIIT Main Building Lobby"]    SIIT Main Building
     
+    # 🚨 FIX: Scroll button into view to prevent interception
     Wait Until Element Is Visible    ${LOST_SUBMIT_BUTTON}
+    Scroll Element Into View    ${LOST_SUBMIT_BUTTON}
+    Sleep    0.5s
     Click Element    ${LOST_SUBMIT_BUTTON}
     
     Alert Should Be Present    Lost item reported successfully!
 
-Go To Report Found Page
+Verify Admin Can Report Found Item
+    [Arguments]    ${ITEM_NAME}
     Go To    ${REPORT_FOUND_URL}
     Wait Until Page Contains    Report Found Item
-
-Report Found Item Successfully
-    [Documentation]    Fills form and ensures success alert appears.
-    Input Text    xpath=//form[@class="rf-form"]//input[@placeholder="e.g., iPhone 13 Pro"]    ${FOUND_ITEM_NAME}
+    
+    Input Text    xpath=//form[@class="rf-form"]//input[@placeholder="e.g., iPhone 13 Pro"]    ${ITEM_NAME}
     Input Text    xpath=//form[@class="rf-form"]//textarea[@class="rf-textarea"]    Description test.
     Select From List By Value    xpath=//form[@class="rf-form"]//select[@class="rf-input rf-select"]    Accessories
     Input Text    xpath=//input[@type="datetime-local"]    ${DATETIME_LOST}
     Sleep    0.5s
     Input Text    xpath=//input[@placeholder="e.g., Main Cafeteria..."]    SIIT Main Building
     
+    # 🚨 FIX: Scroll button into view to prevent interception
     Wait Until Element Is Visible    ${FOUND_SUBMIT_BUTTON}
+    Scroll Element Into View    ${FOUND_SUBMIT_BUTTON}
+    Sleep    0.5s
     Click Element    ${FOUND_SUBMIT_BUTTON}
     
     Alert Should Be Present    SUCCESS! Item reported
 
-Click Item Card On List Page
+Verify Item Is Listed And Click
     [Arguments]    ${ITEM_NAME_TO_CLICK}
-    [Documentation]    Waits for loading to finish, scrolls to the card title, and clicks it.
-    
-    # 1. Wait for loading overlay to disappear
     Wait Until Page Does Not Contain    Loading items...    timeout=15s
     
-    # 2. Define robust XPath using dot (.) to match text content inside the div
     ${CARD_TITLE_LOCATOR}=    Set Variable    xpath=//div[contains(@class, "card-title") and contains(., "${ITEM_NAME_TO_CLICK}")]
     
-    # 3. Wait until the specific card is in the DOM
     Wait Until Element Is Visible    ${CARD_TITLE_LOCATOR}    timeout=10s
-    
-    # 4. Scroll it into view to prevent "Element Not Interactable"
     Scroll Element Into View    ${CARD_TITLE_LOCATOR}
-    
-    # 5. Click
     Click Element    ${CARD_TITLE_LOCATOR}
 
-Verify Item Details Page
+Verify Item Details Page Content
     [Arguments]    ${EXPECTED_NAME}    ${EXPECTED_LOCATION}
-    [Documentation]    Verifies we are on the detail page and see correct info.
     Wait Until Page Contains    ${EXPECTED_NAME} Details
     Wait Until Page Contains    ${EXPECTED_LOCATION}
     Wait Until Page Contains    Date Lost/Found:
 
-Verify And Open Owner Review
+Execute Admin Return Process
     [Arguments]    ${CLAIMANT_NAME}
-    [Documentation]    Finds the request card by claimant name and clicks Open Review.
+    Wait Until Element Is Visible    ${MARK_RETURNED_BUTTON}
+    Click Button    ${MARK_RETURNED_BUTTON}
+    Wait Until Page Contains    Finalize Claim / Return
     
-    # Wait for list to load
-    Wait Until Page Does Not Contain    Loading requests...    timeout=10s
+    Input Text    ${ID_NAME_INPUT}        ${CLAIMANT_NAME}
+    Click Element    ${ID_RADIO_STUDENT}
+    Input Text    ${ID_STUDENT_ID_INPUT}  ${STUDENT_ID_VAL}
+    Input Text    ${ID_TEL_INPUT}         ${CLAIMANT_PHONE}
     
-    # Define locator for the specific claimant name card
-    ${NAME_LOCATOR}=    Set Variable    xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "${CLAIMANT_NAME}")]
-    Wait Until Element Is Visible    ${NAME_LOCATOR}
-    Scroll Element Into View    ${NAME_LOCATOR}
+    Choose File   ${ID_FILE_INPUT}        ${IMAGE_PATH}
     
-    # Find the 'Open Review' button associated with this card (sibling relationship)
-    ${REVIEW_BTN}=    Set Variable    xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "${CLAIMANT_NAME}")]/following-sibling::div[@class="owner-action-row"]/button
+    # Scroll submit button into view
+    Scroll Element Into View    ${ID_SUBMIT_BUTTON}
+    Click Button    ${ID_SUBMIT_BUTTON}
     
-    Click Element    ${REVIEW_BTN}
+    Wait Until Page Contains    Confirm marking item
+    Click Button    ${CONFIRM_YES_BUTTON}
     
-    # Verify Modal Opened
-    Wait Until Page Contains    Review Verification Request
+    # 🚨 FIX: Explicitly handle the success alert
+    # We sleep briefly to ensure the alert is rendered by the browser
+    Sleep    1s
+    Handle Alert    action=ACCEPT
+    
+    Wait Until Location Is    ${ADMIN_ITEMS_URL}    timeout=10s
+
+Verify Owner Verification List
+    [Arguments]    ${CLAIMANT_NAME}
+    Go To    ${ADMIN_OWNERLIST_URL}
+    Wait Until Page Contains    Owner Verification Lists
+    Wait Until Page Does Not Contain    Loading requests...
+    
     Wait Until Page Contains    ${CLAIMANT_NAME}
     Wait Until Page Contains    ${STUDENT_ID_VAL}
     
-    # Close Modal
+    ${REVIEW_BTN}=    Set Variable    xpath=//div[contains(@class, "owner-claimant-name") and contains(text(), "${CLAIMANT_NAME}")]/following-sibling::div[@class="owner-action-row"]/button
+    
+    Scroll Element Into View    ${REVIEW_BTN}
+    Click Element    ${REVIEW_BTN}
+    
+    Wait Until Page Contains    Review Verification Request
+    Wait Until Page Contains    ${CLAIMANT_NAME}
+    
     Click Button    xpath=//button[contains(text(), "Close Review")]
+
+Execute Admin Delete Process
+    [Documentation]    Clicks Delete, handles the 'Are you sure?' alert, and the 'Success' alert.
+    Wait Until Element Is Visible    ${DELETE_BUTTON}
+    Click Button    ${DELETE_BUTTON}
+    
+    # 1. Handle the Confirmation Dialog ("Are you sure?")
+    Handle Alert    action=ACCEPT
+    
+    # 2. Wait for and Handle the Success Alert
+    Sleep    1s
+    Handle Alert    action=ACCEPT
+    
+    # 3. Verify redirection back to list
+    Wait Until Location Is    ${ADMIN_ITEMS_URL}    timeout=10s
+
+Verify Item Is Deleted From List
+    [Arguments]    ${ITEM_NAME}
+    [Documentation]    Ensures the item card is NO LONGER visible on the list page.
+    Wait Until Page Does Not Contain    Loading items...
+    Page Should Not Contain    ${ITEM_NAME}
