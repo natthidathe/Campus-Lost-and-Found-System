@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ClientLayout from "./AdminLayout1";
 
-
+// ✅ Your deployed API base
 const API_BASE = process.env.REACT_APP_API_BASE_PROD_URL;
 const GET_UPLOAD_URL_API = `${API_BASE}/getVerificationUploadUrl`;
 const SAVE_DATA_API = `${API_BASE}/saveVerificationData`;
@@ -94,7 +94,7 @@ function Identification() {
       role,
       studentId: role === "student" ? studentId : "",
       tel,
-      photoKeys, 
+      photoKeys, // array of S3 keys
     };
 
     const res = await fetch(SAVE_DATA_API, {
@@ -200,7 +200,7 @@ function Identification() {
           <h2 className="id-section-title">Owner Information</h2>
 
           <form className="id-form" onSubmit={handleSubmit}>
-            
+            {/* Name */}
             <div className="form-group">
               <label className="form-label">
                 Name <span className="required">*</span>
@@ -214,7 +214,7 @@ function Identification() {
               />
             </div>
 
-            
+            {/* SIIT Student / Other */}
             <div className="id-row id-row-radio">
               <div className="radio-group">
                 <label className="radio-item">
@@ -253,7 +253,7 @@ function Identification() {
               </div>
             </div>
 
-            
+            {/* Tel + Upload */}
             <div className="id-row">
               <div className="form-group half">
                 <label className="form-label">Tel.</label>
@@ -284,7 +284,7 @@ function Identification() {
               <p className="error-message">{submitError}</p>
             )}
 
-            
+            {/* Buttons */}
             <div className="id-actions">
               <button
                 type="button"
@@ -302,7 +302,7 @@ function Identification() {
         </section>
       </div>
 
-      
+      {/* ========= CONFIRM POPUP ========= */}
       {showConfirm && (
         <>
           <div className="confirm-backdrop" />
