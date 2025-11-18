@@ -17,8 +17,8 @@ function ReportLost() {
 
   // API endpoint
   const API_URL =
-    "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/reportLostItem";
-
+  process.env.REACT_APP_REPORT_LOST_ITEM_URL;
+  
 const handleSubmit = async (e) => {
       e.preventDefault();
       setLoading(true);

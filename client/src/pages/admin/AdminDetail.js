@@ -6,8 +6,8 @@ import AdminLayout from "./AdminLayout1"; // Renamed ClientLayout to AdminLayout
 
 // 🔴 Your real DELETE endpoint (no trailing slash, no {pk} here)
 const DELETE_API_URL =
-  "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/deleteItem/deleteItem";
-
+  process.env.REACT_APP_DELETE_ITEM_URL;
+  
 // Helper function to format the ISO date string (copied from the client detail fix)
 const formatDateTime = (isoString) => {
   if (!isoString) return { date: "N/A", time: "N/A" };

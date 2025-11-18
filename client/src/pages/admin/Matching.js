@@ -5,7 +5,7 @@ import AdminLayout from "./AdminLayout1";
 import "../../css/admin.css"; 
 
 // 🚨 Use the LIVE API URL for fetching all notifications 🚨
-const NOTIFICATIONS_API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/GetNoti/admin/notifications"; 
+const NOTIFICATIONS_API_URL = process.env.REACT_APP_GET_ADMIN_NOTIFICATIONS_URL;
 
 // Helper function to format the ISO date string (Kept for optional use, though not displayed)
 const formatMatchDate = (isoString) => {

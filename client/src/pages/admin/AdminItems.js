@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AdminLayout from "./AdminLayout1";
 
 // API URL for the GET /items endpoint
-const ALL_ITEMS_API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/GetItem/items"; 
+const ALL_ITEMS_API_URL = process.env.REACT_APP_GET_ALL_ITEMS_URL;
 
 function Home() {
   const navigate = useNavigate();

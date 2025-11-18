@@ -4,7 +4,7 @@ import ClientLayout from "./AdminLayout1";
 import "../../css/admin.css";
 
 // The API URL 
-const API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/ReportFound/items/found"; 
+const API_URL = process.env.REACT_APP_REPORT_FOUND_ITEM_URL;
 
 
 function ReportFound() {

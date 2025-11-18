@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import AdminLayout from "./AdminLayout1";
 
 // API endpoint that returns ALL ITEMS
-const SUMMARY_API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/GetItem/items"; 
+const SUMMARY_API_URL = process.env.REACT_APP_GET_ALL_ITEMS_URL;
 
 // Helper function to check if a timestamp is "today"
 const isToday = (dateString) => {

@@ -5,8 +5,8 @@ import AdminLayout from "./AdminLayout1";
 import "../../css/admin.css"; 
 
 
-const S3_BASE_URL = "https://campuslostandfoundsystem-verification-ids.s3.amazonaws.com";
-const VERIFICATION_API_URL = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/OwnerList/admin/ownerlist"; 
+const S3_BASE_URL = process.env.REACT_APP_S3_VERIFICATION_URL;
+const VERIFICATION_API_URL = process.env.REACT_APP_GET_OWNERLIST_URL;
 
 // Helper function to format the ISO date string (full date/time)
 const formatDateTime = (isoString) => {

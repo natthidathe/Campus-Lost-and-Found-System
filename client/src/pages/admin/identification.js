@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ClientLayout from "./AdminLayout1";
 
 // ✅ Your deployed API base
-const API_BASE = "https://jko38gd3c5.execute-api.us-east-1.amazonaws.com/Prod";
+const API_BASE = process.env.REACT_APP_API_BASE_PROD_URL;
 const GET_UPLOAD_URL_API = `${API_BASE}/getVerificationUploadUrl`;
 const SAVE_DATA_API = `${API_BASE}/saveVerificationData`;
 
